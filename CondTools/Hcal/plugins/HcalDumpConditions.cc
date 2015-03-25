@@ -53,7 +53,8 @@ namespace edmtest
     virtual void analyze(const edm::Event& e, const edm::EventSetup& c) override;
 
     template<class S, class SRcd> void dumpIt(S* myS, SRcd* mySRcd, const edm::Event& e, const edm::EventSetup& context, std::string name);
-
+    //void dumpIt(HcalQIEDataExtended* myS, HcalQIEDataExtendedRcd* mySRcd, const edm::Event& e, const edm::EventSetup& context, std::string name);
+    void dumpIt(HcalRecoParams* myS, HcalRecoParamsRcd* mySRcd, const edm::Event& e, const edm::EventSetup& context, std::string name);
   private:
     std::string front;
     std::vector<std::string> mDumpRequest;
@@ -79,6 +80,55 @@ namespace edmtest
 
   }
 
+
+  //FIXME: Make it general for all classes inheriting from HcalCondObjectContainerBase
+  // void HcalDumpConditions::dumpIt(HcalQIEDataExtended* myS, HcalQIEDataExtendedRcd* mySRcd, const edm::Event& e, const edm::EventSetup& context, std::string name)
+  // {
+  //   int myrun = e.id().run();
+  //   edm::ESHandle<HcalQIEDataExtended> p;
+  //   context.get<HcalQIEDataExtendedRcd>().get(p);
+  //   HcalQIEDataExtended* myobject = new HcalQIEDataExtended(*p.product());
+
+
+  //   edm::ESHandle<HcalTopology> topology ;
+  //   context.get<IdealGeometryRecord>().get( topology );
+  //   const HcalTopology* topo = &(*topology);
+  //   myobject->setTopo( topo );
+
+  //   std::ostringstream file;
+  //   file << front << name.c_str() << "_Run" << myrun << ".txt";
+  //   std::ofstream outStream(file.str().c_str() );
+  //   std::cout << "HcalDumpConditions: ---- Dumping " << name.c_str() << " ----" << std::endl;
+  //   HcalDbASCIIIO::dumpObject (outStream, (*myobject) );
+
+  //   if ( context.get<HcalQIEDataExtendedRcd>().validityInterval().first() == edm::IOVSyncValue::invalidIOVSyncValue() )
+  //     std::cout << "error: invalid IOV sync value !" << std::endl;
+
+  // }
+
+  void HcalDumpConditions::dumpIt(HcalRecoParams* myS, HcalRecoParamsRcd* mySRcd, const edm::Event& e, const edm::EventSetup& context, std::string name)
+  {
+    int myrun = e.id().run();
+    edm::ESHandle<HcalRecoParams> p;
+    context.get<HcalRecoParamsRcd>().get(p);
+    HcalRecoParams* myobject = new HcalRecoParams(*p.product());
+
+
+    edm::ESHandle<HcalTopology> topology ;
+    context.get<IdealGeometryRecord>().get( topology );
+    const HcalTopology* topo = &(*topology);
+    myobject->setTopo( topo );
+
+    std::ostringstream file;
+    file << front << name.c_str() << "_Run" << myrun << ".txt";
+    std::ofstream outStream(file.str().c_str() );
+    std::cout << "HcalDumpConditions: ---- Dumping " << name.c_str() << " ----" << std::endl;
+    HcalDbASCIIIO::dumpObject (outStream, (*myobject) );
+
+    if ( context.get<HcalRecoParamsRcd>().validityInterval().first() == edm::IOVSyncValue::invalidIOVSyncValue() )
+      std::cout << "error: invalid IOV sync value !" << std::endl;
+
+  }
 
   void
    HcalDumpConditions::analyze(const edm::Event& e, const edm::EventSetup& context)
