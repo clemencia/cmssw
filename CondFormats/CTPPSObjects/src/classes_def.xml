@@ -1,0 +1,5 @@
+ <lcgdict>
+       <class name="CTPPSAlignmentCorrections" class_version="0"/>
+       
+       <class name="std::vector<CTPPSAlignmentCorections::CorrectionsSet>"/>
+ </lcgdict>  
