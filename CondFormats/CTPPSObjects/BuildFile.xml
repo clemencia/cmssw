@@ -1,0 +1,20 @@
+<flags GENREFLEX_ARGS="--"/>
+<use name="CondFormats/Common"/>
+<use name="DetectorDescription/Base"/>
+<!-- // maybe in the future
+ <use  name="DataFormats/CTPPSDetId"/>
+-->
+
+<use name="CondFormats/Serialization"/>
+<use name="FWCore/Utilities"/>
+<use name="FWCore/ParameterSet"/>
+<use name="FWCore/MessageLogger"/>
+<use name="Math/GenVector"/>
+
+<use name="xerces-c"/>
+<use name="rootmath"/>
+<use name="boost_serialization"/>
+
+<export>
+  <lib name="1"/>
+</export>
