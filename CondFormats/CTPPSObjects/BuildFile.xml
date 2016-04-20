@@ -9,7 +9,7 @@
 <use name="FWCore/Utilities"/>
 <use name="FWCore/ParameterSet"/>
 <use name="FWCore/MessageLogger"/>
-<use name="Math/GenVector"/>
+
 
 <use name="xerces-c"/>
 <use name="rootmath"/>
