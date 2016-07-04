@@ -1,7 +1,0 @@
-<use name="CondFormats/CTPPSObjects"/>
-<use name="CondCore/DBOutputService"/>
-<use name="FWCore/ServiceRegistry"/>
-<use name="FWCore/Framework"/>
-<use name="root"/>
-<use name="rootcore"/>
-<flags EDM_PLUGIN="1"/>
