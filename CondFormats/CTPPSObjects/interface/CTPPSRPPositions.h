@@ -18,9 +18,9 @@ class CTPPSRPPositions{
 
 
   void setRPPosition(unsigned int RPid, const CTPPSRPPosition & RPPos);
-  void setRPPosition(unsigned int RPid, double distBPCenter=0.0); //distance in mm
-  void setRPPositions(const posmap & RPpositions);
-  void setRPPositions(const vector<unsigned int>& RPids,const vector<double>& distsBPCent);
+  void  setRPPosition(unsigned int RPid, double distBPCenter=0.0);
+  void  setRPPositions(const posmap & RPpositions);
+  void  setRPPositions(const vector<unsigned int>& RPids,const vector<double>& distsBPCent);
 
   const posmap& getPosmap () const  {return m_positions;}
 
