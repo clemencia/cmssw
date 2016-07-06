@@ -98,13 +98,40 @@ myCTPPSRPPosMaker::analyze(const edm::Event& iEvent, const edm::EventSetup& iSet
 
    CTPPSRPPositions* pRPPositions = new CTPPSRPPositions();
    CTPPSRPPositions* pRPPositions0 = new CTPPSRPPositions();
+   const CTPPSRPPositions::posmap & mymap = pRPPositions->getPosmap();
+   const CTPPSRPPositions::posmap & mymap0 = pRPPositions0->getPosmap();
+   std::cout<<"Size of mymap "<<mymap.size() <<std::endl;
+   std::cout<<"Size of mymap0 "<<mymap0.size() <<std::endl;
+
    pRPPositions->setRPPosition(0,41.287);
+
+   CTPPSRPPosition posexample(10.1,0.9,1.,2.,3.);
+   pRPPositions0->setRPPosition(0,20.);
+   pRPPositions0->setRPPosition(1,posexample);
+   pRPPositions0->setRPPosition(2);
+
+   std::cout<<"Size of mymap "<<mymap.size() <<std::endl;
+   std::cout<<"Size of mymap0 "<<mymap0.size() <<std::endl;
+
+   CTPPSRPPositions::posmap::const_iterator it = mymap.begin(); 
+   std::cout<<"Content  of mymap keys: "<< it->first <<" values: "<< pRPPositions->getRPDistBPCenter(it->first)  <<std::endl;
+
+   std::cout<<"Content of mymap0 "<<std::endl;
+   for(it = mymap0.begin(); it != mymap0.end() ; ++it)
+     std::cout<<"keys :" << it->first<< " values: "<< pRPPositions0->getRPDistBPCenter(it->first) <<std::endl;
+
+   std::cout<<"testing "<< pRPPositions->getRPDistBPCenter(1) <<std::endl;
+   std::cout<<"Size of mymap "<<mymap.size() <<std::endl;
+
 // Form the data here
 
 edm::Service<cond::service::PoolDBOutputService> poolDbService;
-if( poolDbService.isAvailable() )
-  poolDbService->writeOne( pRPPositions, poolDbService->currentTime(),
+ if( poolDbService.isAvailable() ){
+  poolDbService->writeOne( pRPPositions, poolDbService->beginOfTime(),
 			   m_record  );
+  poolDbService->writeOne( pRPPositions0, poolDbService->currentTime(),
+			   m_record  );
+ }
 ///should I use PopCon instead (template service)
 
 
