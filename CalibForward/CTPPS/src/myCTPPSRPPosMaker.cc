@@ -103,6 +103,7 @@ myCTPPSRPPosMaker::analyze(const edm::Event& iEvent, const edm::EventSetup& iSet
 
    CTPPSRPPositions* pRPPositions = new CTPPSRPPositions();
    CTPPSRPPositions* pRPPositions0 = new CTPPSRPPositions();
+
    std::cout<<"Size of pRPPositions obj  "<<pRPPositions->size() <<std::endl;
    std::cout<<"Size of pRPPositions0 obj "<<pRPPositions0->size() <<std::endl;
 
