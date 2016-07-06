@@ -39,7 +39,8 @@ CTPPSRPPosition CTPPSRPPositions::getRPPosition(unsigned int id) const {
 
   if (it != m_positions.end())
     a= it->second;
-  
+  else
+    std::cout<<"No positions defined for RP id "<< id <<std::endl;
   return a;
 }
 

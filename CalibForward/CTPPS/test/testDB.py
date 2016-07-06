@@ -12,7 +12,7 @@ process.source = cms.Source("EmptyIOVSource",
 
 process.load("CondCore.CondDB.CondDB_cfi")
 # output database (in this case local sqlite file)
-process.CondDB.connect = 'sqlite_file:myctpps00.db'
+process.CondDB.connect = 'sqlite_file:myctpps.db'
 
 
 process.PoolDBOutputService = cms.Service("PoolDBOutputService",
@@ -20,7 +20,7 @@ process.PoolDBOutputService = cms.Service("PoolDBOutputService",
     timetype = cms.untracked.string('runnumber'),
     toPut = cms.VPSet(cms.PSet(
         record = cms.string('CTPPSRPPositionsRcd'),
-        tag = cms.string('myctppsRPpos_00')
+        tag = cms.string('myctppsRPpos_test0')
     ))
 )
 
