@@ -1,4 +1,3 @@
-
 #ifndef _CTPPSRPPosition_h_
 #define _CTPPSRPPosition_h_
 

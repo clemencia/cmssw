@@ -40,7 +40,9 @@ CTPPSRPPosition CTPPSRPPositions::getRPPosition(unsigned int id) const {
   if (it != m_positions.end())
     a= it->second;
   else
-    std::cout<<"No positions defined for RP id "<< id <<std::endl;
+    //    std::cout<<"No positions defined for RP id "<< id <<std::endl;
+    throw cms::Exception("CTPPSRPPositions")<< "No positions defined for RP id " << id << "\n";
+
   return a;
 }
 
@@ -53,7 +55,6 @@ double CTPPSRPPositions::getRPDistBPCenter(unsigned int id) const {
   double d= a.getDistBPCenter();
   return d;
 }
-
 
 double CTPPSRPPositions::getRPOffset(unsigned int id) const {
   CTPPSRPPosition a = getRPPosition(id);
