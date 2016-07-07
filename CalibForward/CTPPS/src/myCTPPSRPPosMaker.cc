@@ -98,30 +98,74 @@ myCTPPSRPPosMaker::analyze(const edm::Event& iEvent, const edm::EventSetup& iSet
 
    CTPPSRPPositions* pRPPositions = new CTPPSRPPositions();
    CTPPSRPPositions* pRPPositions0 = new CTPPSRPPositions();
-   const CTPPSRPPositions::posmap & mymap = pRPPositions->getPosmap();
-   const CTPPSRPPositions::posmap & mymap0 = pRPPositions0->getPosmap();
-   std::cout<<"Size of mymap "<<mymap.size() <<std::endl;
-   std::cout<<"Size of mymap0 "<<mymap0.size() <<std::endl;
+   std::cout<<"Size of pRPPositions obj  "<<pRPPositions->size() <<std::endl;
+   std::cout<<"Size of pRPPositions0 obj "<<pRPPositions0->size() <<std::endl;
 
    pRPPositions->setRPPosition(0,41.287);
 
    CTPPSRPPosition posexample(10.1,0.9,1.,2.,3.);
-   pRPPositions0->setRPPosition(0,20.);
+   pRPPositions0->setRPPosition(5,20.);
    pRPPositions0->setRPPosition(1,posexample);
    pRPPositions0->setRPPosition(2);
 
-   std::cout<<"Size of mymap "<<mymap.size() <<std::endl;
-   std::cout<<"Size of mymap0 "<<mymap0.size() <<std::endl;
+
+   std::cout<<"Size of pRPPositions obj  "<<pRPPositions->size() <<std::endl;
+   std::cout<<"Size of pRPPositions0 obj "<<pRPPositions0->size() <<std::endl;
+
+
+   const CTPPSRPPositions::posmap & mymap = pRPPositions->getPosmap();
+   const CTPPSRPPositions::posmap & mymap0 = pRPPositions0->getPosmap();
+
 
    CTPPSRPPositions::posmap::const_iterator it = mymap.begin(); 
-   std::cout<<"Content  of mymap keys: "<< it->first <<" values: "<< pRPPositions->getRPDistBPCenter(it->first)  <<std::endl;
+   std::cout<<"Content  of pRPPositions keys: "<< it->first <<std::endl 
+	    <<" values dist: "<< pRPPositions->getRPDistBPCenter(it->first)<<std::endl  
+	    <<" offset " << (it->second).getOffset()<<std::endl
+	    <<" motor " << (it->second).getRawMotor()<<std::endl
+	    <<" lvd    " << (it->second).getRawLVD()<<std::endl
+	    <<" resolver " << (it->second).getRawResolver()<<std::endl
+	    <<std::endl;
+   
 
-   std::cout<<"Content of mymap0 "<<std::endl;
+   std::cout<<"Content of pRPPositions0 "<<std::endl;
    for(it = mymap0.begin(); it != mymap0.end() ; ++it)
-     std::cout<<"keys :" << it->first<< " values: "<< pRPPositions0->getRPDistBPCenter(it->first) <<std::endl;
+     std::cout<<"keys :" << it->first <<std::endl
+	      << " values: distance " << pRPPositions0->getRPDistBPCenter(it->first)<<std::endl
+	      <<" offset " << (it->second).getOffset()<<std::endl
+	      <<" motor " << (it->second).getRawMotor()<<std::endl
+	      <<" lvd    " << (it->second).getRawLVD()<<std::endl
+	      <<" resolver " << (it->second).getRawResolver()<<std::endl
+	      <<std::endl;
 
    std::cout<<"testing "<< pRPPositions->getRPDistBPCenter(1) <<std::endl;
-   std::cout<<"Size of mymap "<<mymap.size() <<std::endl;
+   std::cout<<"Size of mymap "<<mymap.size() <<std::endl<<std::endl;
+
+   ////
+
+   CTPPSRPPositions* pRPPositions1 = new CTPPSRPPositions();
+   std::cout<<"Size of pRPPositions1 obj  "<<pRPPositions1->size() <<std::endl<<std::endl;
+
+   CTPPSRPPosition posexample1(50.6,-8.9,0.1,0.2,0.3);
+   CTPPSRPPositions::posmap mymap1;
+   mymap1[20]=CTPPSRPPosition(26.,62.,0.11,0.22,0.33);
+   mymap1[6]=posexample1;
+
+   pRPPositions1->setRPPositions(mymap1);   
+
+   std::cout<<"Size of pRPPositions1 obj  "<<pRPPositions1->size() <<std::endl;
+   const CTPPSRPPositions::posmap & mymapc1 = pRPPositions1->getPosmap();
+
+   std::cout<<"Content of pRPPositions1 "<<std::endl;
+   for(it = mymapc1.begin(); it != mymapc1.end() ; ++it)
+     std::cout<<"keys :" << it->first <<std::endl
+	      << " values: distance " << pRPPositions1->getRPDistBPCenter(it->first)<<std::endl
+	      <<" offset " << (it->second).getOffset()<<std::endl
+	      <<" motor " << (it->second).getRawMotor()<<std::endl
+	      <<" lvd    " << (it->second).getRawLVD()<<std::endl
+	      <<" resolver " << (it->second).getRawResolver()<<std::endl
+	      <<std::endl;
+
+
 
 // Form the data here
 
