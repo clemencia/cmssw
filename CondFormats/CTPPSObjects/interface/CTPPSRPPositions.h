@@ -28,6 +28,7 @@ class CTPPSRPPositions{
   CTPPSRPPosition & getRPPosition(unsigned int RPid);
   
   double getRPDistBPCenter(unsigned int RPid) const;
+  double size()const {return m_positions.size();}
 
  private:
 
