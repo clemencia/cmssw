@@ -39,7 +39,10 @@ CTPPSRPPosition CTPPSRPPositions::getRPPosition(unsigned int id) const {
 
   if (it != m_positions.end())
     a= it->second;
-  
+  else
+    //    std::cout<<"No positions defined for RP id "<< id <<std::endl;
+    throw cms::Exception("CTPPSRPPositions")<< "No positions defined for RP id " << id << "\n";
+
   return a;
 }
 
@@ -51,4 +54,28 @@ double CTPPSRPPositions::getRPDistBPCenter(unsigned int id) const {
   CTPPSRPPosition a = getRPPosition(id);
   double d= a.getDistBPCenter();
   return d;
+}
+
+double CTPPSRPPositions::getRPOffset(unsigned int id) const {
+  CTPPSRPPosition a = getRPPosition(id);
+  double o= a.getOffset();
+  return o;
+}
+
+double CTPPSRPPositions::getRPRawLVD(unsigned int id) const {
+  CTPPSRPPosition a = getRPPosition(id);
+  double lvd= a.getRawLVD();
+  return lvd;
+}
+
+double CTPPSRPPositions::getRPRawMotor(unsigned int id) const {
+  CTPPSRPPosition a = getRPPosition(id);
+  double motor= a.getRawMotor();
+  return motor;
+}
+
+double CTPPSRPPositions::getRPRawResolver(unsigned int id) const {
+  CTPPSRPPosition a = getRPPosition(id);
+  double res= a.getRawResolver();
+  return res;
 }
