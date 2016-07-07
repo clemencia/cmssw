@@ -53,3 +53,28 @@ double CTPPSRPPositions::getRPDistBPCenter(unsigned int id) const {
   double d= a.getDistBPCenter();
   return d;
 }
+
+
+double CTPPSRPPositions::getRPOffset(unsigned int id) const {
+  CTPPSRPPosition a = getRPPosition(id);
+  double o= a.getOffset();
+  return o;
+}
+
+double CTPPSRPPositions::getRPRawLVD(unsigned int id) const {
+  CTPPSRPPosition a = getRPPosition(id);
+  double lvd= a.getRawLVD();
+  return lvd;
+}
+
+double CTPPSRPPositions::getRPRawMotor(unsigned int id) const {
+  CTPPSRPPosition a = getRPPosition(id);
+  double motor= a.getRawMotor();
+  return motor;
+}
+
+double CTPPSRPPositions::getRPRawResolver(unsigned int id) const {
+  CTPPSRPPosition a = getRPPosition(id);
+  double res= a.getRawResolver();
+  return res;
+}
