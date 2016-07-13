@@ -51,9 +51,9 @@ process.get = cms.EDAnalyzer("EventSetupRecordDataGetter",
 
 process.prod = cms.EDAnalyzer("myCTPPSRPPosESAnalyzer")
  
-process.asciiprint = cms.OutputModule("AsciiOutputModule")
+# process.asciiprint = cms.OutputModule("AsciiOutputModule")
  
 process.p = cms.Path(process.prod)
-process.ep = cms.EndPath(process.asciiprint)
+# process.ep = cms.EndPath(process.asciiprint)
 
 
