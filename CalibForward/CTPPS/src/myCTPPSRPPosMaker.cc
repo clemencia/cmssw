@@ -51,9 +51,12 @@ class myCTPPSRPPosMaker : public edm::one::EDAnalyzer<edm::one::SharedResources>
       virtual void beginJob() override;
       virtual void analyze(const edm::Event&, const edm::EventSetup&) override;
       virtual void endJob() override;
-      std::string m_record;
 
       // ----------member data ---------------------------
+  std::string m_record;
+  std::vector<unsigned int> m_rpid;
+  std::vector<double> m_rpdist;
+
 };
 
 //
@@ -68,7 +71,9 @@ class myCTPPSRPPosMaker : public edm::one::EDAnalyzer<edm::one::SharedResources>
 // constructors and destructor
 //
 myCTPPSRPPosMaker::myCTPPSRPPosMaker(const edm::ParameterSet& iConfig):
-  m_record(iConfig.getParameter<std::string>("record"))
+  m_record(iConfig.getParameter<std::string>("record")),
+  m_rpid(iConfig.getParameter<std::vector<unsigned int>>("RPIDvect")),
+  m_rpdist(iConfig.getParameter<std::vector<double>>("RPDistvect"))
 {
    //now do what ever initialization is needed
    usesResource("TFileService");
@@ -140,7 +145,7 @@ myCTPPSRPPosMaker::analyze(const edm::Event& iEvent, const edm::EventSetup& iSet
    std::cout<<"testing "<< pRPPositions->getRPDistBPCenter(1) <<std::endl;
    std::cout<<"Size of mymap "<<mymap.size() <<std::endl<<std::endl;
 
-   ////
+   /////// set from a posmap
 
    CTPPSRPPositions* pRPPositions1 = new CTPPSRPPositions();
    std::cout<<"Size of pRPPositions1 obj  "<<pRPPositions1->size() <<std::endl<<std::endl;
@@ -164,19 +169,51 @@ myCTPPSRPPosMaker::analyze(const edm::Event& iEvent, const edm::EventSetup& iSet
 	      <<" lvd    " << (it->second).getRawLVD()<<std::endl
 	      <<" resolver " << (it->second).getRawResolver()<<std::endl
 	      <<std::endl;
+   
+   edm::Service<cond::service::PoolDBOutputService> poolDbService;
+   if( poolDbService.isAvailable() ){
+     poolDbService->writeOne( pRPPositions, poolDbService->beginOfTime(),
+			      m_record  );
+     poolDbService->writeOne( pRPPositions1, poolDbService->currentTime(),
+			      m_record  );
+   }
+   
+   
+   if (m_rpid.size()!=0){
+     /////// set from a pair of vectors (rpids and rpdistances) --> from xml
 
+     CTPPSRPPositions* pRPPositions2 = new CTPPSRPPositions();
+     std::cout<<"Size of pRPPositions2 obj  "<<pRPPositions2->size() <<std::endl<<std::endl;
 
+   
+     pRPPositions2->setRPPositions(m_rpid,m_rpdist);   
 
-// Form the data here
+     std::cout<<"Size of pRPPositions2 obj  "<<pRPPositions2->size() <<std::endl;
+     const CTPPSRPPositions::posmap & mymapc2 = pRPPositions2->getPosmap();
 
-edm::Service<cond::service::PoolDBOutputService> poolDbService;
- if( poolDbService.isAvailable() ){
-  poolDbService->writeOne( pRPPositions, poolDbService->beginOfTime(),
-			   m_record  );
-  poolDbService->writeOne( pRPPositions0, poolDbService->currentTime(),
-			   m_record  );
- }
-///should I use PopCon instead (template service)
+     std::cout<<"Content of pRPPositions2 "<<std::endl;
+     for(it = mymapc2.begin(); it != mymapc2.end() ; ++it)
+       std::cout<<"keys :" << it->first <<std::endl
+		<< " values: distance " << pRPPositions2->getRPDistBPCenter(it->first)<<std::endl
+		<<" offset " << (it->second).getOffset()<<std::endl
+		<<" motor " << (it->second).getRawMotor()<<std::endl
+		<<" lvd    " << (it->second).getRawLVD()<<std::endl
+		<<" resolver " << (it->second).getRawResolver()<<std::endl
+		<<std::endl;
+
+   
+
+     // Form the data here
+
+     //  edm::Service<cond::service::PoolDBOutputService> poolDbService;
+     if( poolDbService.isAvailable() ){
+       //  poolDbService->writeOne( pRPPositions, poolDbService->beginOfTime(),
+       //			   m_record  );
+       cond::Time_t valid_time = 5;
+       poolDbService->writeOne( pRPPositions2,valid_time, m_record  );
+     }
+   }
+   ///should I use PopCon instead (template service)
 
 
 // #ifdef THIS_IS_AN_EVENT_EXAMPLE
