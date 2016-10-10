@@ -12,7 +12,7 @@ process.source = cms.Source("EmptyIOVSource",
 
 process.load("CondCore.CondDB.CondDB_cfi")
 # output database (in this case local sqlite file)
-process.CondDB.connect = 'sqlite_file:myctpps00.db'
+process.CondDB.connect = 'sqlite_file:myctpps_xml.db'
 
 #process.load("CondCore.DBCommon.CondDBCommon_cfi")
 # input database (in this case local sqlite file)
@@ -23,7 +23,7 @@ process.PoolDBESSource = cms.ESSource("PoolDBESSource",
     DumpStat=cms.untracked.bool(True),
     toGet = cms.VPSet(cms.PSet(
         record = cms.string('CTPPSRPPositionsRcd'),
-        tag = cms.string("myctppsRPpos_00")
+        tag = cms.string("myctppsRPpos_test0")
     )),
 )
 
