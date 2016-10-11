@@ -34,16 +34,16 @@ void CTPPSRPPositions::setRPPositions(const vector<unsigned int> & RPids,const v
 
 
 CTPPSRPPosition CTPPSRPPositions::getRPPosition(unsigned int id) const {
-  CTPPSRPPosition a;
   posmap::const_iterator it = m_positions.find(id);
 
   if (it != m_positions.end())
-    a= it->second;
+    return it->second;
 
   else
     //    std::cout<<"No positions defined for RP id "<< id <<std::endl;
     throw cms::Exception("CTPPSRPPositions")<< "No positions defined for RP id " << id << "\n";
 
+  CTPPSRPPosition a;
   return a;
 }
 
@@ -51,9 +51,9 @@ CTPPSRPPosition& CTPPSRPPositions::getRPPosition(unsigned int id) {
   return m_positions[id];
 }
 
-double CTPPSRPPositions::getRPDistBPCenter(unsigned int id) const {
+double CTPPSRPPositions::getRPDistanceToBeamPipeCenter(unsigned int id) const {
   CTPPSRPPosition a = getRPPosition(id);
-  double d= a.getDistBPCenter();
+  double d= a.getDistanceToBeamPipeCenter();
   return d;
 }
 
@@ -64,10 +64,10 @@ double CTPPSRPPositions::getRPOffset(unsigned int id) const {
   return o;
 }
 
-double CTPPSRPPositions::getRPRawLVD(unsigned int id) const {
+double CTPPSRPPositions::getRPRawLVDT(unsigned int id) const {
   CTPPSRPPosition a = getRPPosition(id);
-  double lvd= a.getRawLVD();
-  return lvd;
+  double lvdt= a.getRawLVDT();
+  return lvdt;
 }
 
 double CTPPSRPPositions::getRPRawMotor(unsigned int id) const {
