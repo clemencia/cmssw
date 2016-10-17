@@ -1,4 +1,3 @@
-
 #include "CondFormats/CTPPSObjects/interface/CTPPSRPPositions.h"
 #include "FWCore/Utilities/interface/Exception.h" 
 #include <iostream>
