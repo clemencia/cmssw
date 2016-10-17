@@ -26,7 +26,7 @@ process.PoolDBOutputService = cms.Service("PoolDBOutputService",
 
 from ParseMyXML import RPIDAndDistFromXML
 
-RPinfo=RPIDAndDistFromXML("/afs/cern.ch/work/c/cmora/CTPPSDB/CMSSW_8_1_0_pre8/src/RP_Dist_Beam_Cent.xml")
+RPinfo=RPIDAndDistFromXML("RP_Dist_Beam_Cent.xml")
 
 process.WriteInDB = cms.EDAnalyzer("myCTPPSRPPosMaker",
                                    record= cms.string('CTPPSRPPositionsRcd'),

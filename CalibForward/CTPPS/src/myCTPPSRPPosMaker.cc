@@ -107,6 +107,7 @@ myCTPPSRPPosMaker::analyze(const edm::Event& iEvent, const edm::EventSetup& iSet
    std::cout<<"Size of pRPPositions0 obj "<<pRPPositions0->size() <<std::endl;
 
    pRPPositions->setRPPosition(0,41.287);
+   pRPPositions->setRPPosition(1,125.9);
 
    CTPPSRPPosition posexample(10.1,0.9,1.,2.,3.);
    pRPPositions0->setRPPosition(5,20.);
@@ -124,10 +125,10 @@ myCTPPSRPPosMaker::analyze(const edm::Event& iEvent, const edm::EventSetup& iSet
 
    CTPPSRPPositions::posmap::const_iterator it = mymap.begin(); 
    std::cout<<"Content  of pRPPositions keys: "<< it->first <<std::endl 
-	    <<" values dist: "<< pRPPositions->getRPDistBPCenter(it->first)<<std::endl  
+	    <<" values dist: "<< pRPPositions->getRPDistanceToBeamPipeCenter(it->first)<<std::endl  
 	    <<" offset " << (it->second).getOffset()<<std::endl
 	    <<" motor " << (it->second).getRawMotor()<<std::endl
-	    <<" lvd    " << (it->second).getRawLVD()<<std::endl
+	    <<" lvdt    " << (it->second).getRawLVDT()<<std::endl
 	    <<" resolver " << (it->second).getRawResolver()<<std::endl
 	    <<std::endl;
    
@@ -135,14 +136,14 @@ myCTPPSRPPosMaker::analyze(const edm::Event& iEvent, const edm::EventSetup& iSet
    std::cout<<"Content of pRPPositions0 "<<std::endl;
    for(it = mymap0.begin(); it != mymap0.end() ; ++it)
      std::cout<<"keys :" << it->first <<std::endl
-	      << " values: distance " << pRPPositions0->getRPDistBPCenter(it->first)<<std::endl
+	      << " values: distance " << pRPPositions0->getRPDistanceToBeamPipeCenter(it->first)<<std::endl
 	      <<" offset " << (it->second).getOffset()<<std::endl
 	      <<" motor " << (it->second).getRawMotor()<<std::endl
-	      <<" lvd    " << (it->second).getRawLVD()<<std::endl
+	      <<" lvdt    " << (it->second).getRawLVDT()<<std::endl
 	      <<" resolver " << (it->second).getRawResolver()<<std::endl
 	      <<std::endl;
 
-   std::cout<<"testing "<< pRPPositions->getRPDistBPCenter(1) <<std::endl;
+   std::cout<<"testing "<< pRPPositions->getRPDistanceToBeamPipeCenter(1) <<std::endl;
    std::cout<<"Size of mymap "<<mymap.size() <<std::endl<<std::endl;
 
    /////// set from a posmap
@@ -163,10 +164,10 @@ myCTPPSRPPosMaker::analyze(const edm::Event& iEvent, const edm::EventSetup& iSet
    std::cout<<"Content of pRPPositions1 "<<std::endl;
    for(it = mymapc1.begin(); it != mymapc1.end() ; ++it)
      std::cout<<"keys :" << it->first <<std::endl
-	      << " values: distance " << pRPPositions1->getRPDistBPCenter(it->first)<<std::endl
+	      << " values: distance " << pRPPositions1->getRPDistanceToBeamPipeCenter(it->first)<<std::endl
 	      <<" offset " << (it->second).getOffset()<<std::endl
 	      <<" motor " << (it->second).getRawMotor()<<std::endl
-	      <<" lvd    " << (it->second).getRawLVD()<<std::endl
+	      <<" lvdt    " << (it->second).getRawLVDT()<<std::endl
 	      <<" resolver " << (it->second).getRawResolver()<<std::endl
 	      <<std::endl;
    
@@ -194,10 +195,10 @@ myCTPPSRPPosMaker::analyze(const edm::Event& iEvent, const edm::EventSetup& iSet
      std::cout<<"Content of pRPPositions2 "<<std::endl;
      for(it = mymapc2.begin(); it != mymapc2.end() ; ++it)
        std::cout<<"keys :" << it->first <<std::endl
-		<< " values: distance " << pRPPositions2->getRPDistBPCenter(it->first)<<std::endl
+		<< " values: distance " << pRPPositions2->getRPDistanceToBeamPipeCenter(it->first)<<std::endl
 		<<" offset " << (it->second).getOffset()<<std::endl
 		<<" motor " << (it->second).getRawMotor()<<std::endl
-		<<" lvd    " << (it->second).getRawLVD()<<std::endl
+		<<" lvdt    " << (it->second).getRawLVDT()<<std::endl
 		<<" resolver " << (it->second).getRawResolver()<<std::endl
 		<<std::endl;
 

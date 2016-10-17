@@ -18,7 +18,7 @@ class CTPPSRPPositions{
 
 
   void setRPPosition(unsigned int RPid, const CTPPSRPPosition & RPPos);
-  void setRPPosition(unsigned int RPid, double distBPCenter=0.0); //in mm
+  void setRPPosition(unsigned int RPid, double distBPCenter=0.0); // in mm
   void setRPPositions(const posmap & RPpositions);
   void setRPPositions(const vector<unsigned int>& RPids,const vector<double>& distsBPCent);
 
@@ -27,9 +27,9 @@ class CTPPSRPPositions{
   CTPPSRPPosition   getRPPosition(unsigned int RPid) const;
   CTPPSRPPosition & getRPPosition(unsigned int RPid);
   
-  double getRPDistBPCenter(unsigned int RPid) const;
+  double getRPDistanceToBeamPipeCenter(unsigned int RPid) const;
   double getRPOffset(unsigned int RPid) const;
-  double getRPRawLVD(unsigned int RPid) const;
+  double getRPRawLVDT(unsigned int RPid) const;
   double getRPRawMotor(unsigned int RPid) const;
   double getRPRawResolver(unsigned int RPid) const;
   double size()const {return m_positions.size();}

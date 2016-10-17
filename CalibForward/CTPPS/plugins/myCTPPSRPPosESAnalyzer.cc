@@ -51,10 +51,10 @@ namespace edmtest
    
    for  (CTPPSRPPositions::posmap::const_iterator it = mymap.begin(); it !=mymap.end() ; ++it) 
      std::cout<<"Content  of pRPPositions for key: "<< it->first <<std::endl 
-	      <<" values dist: "<< pRPPositions->getRPDistBPCenter(it->first)<<std::endl  
+	      <<" values dist: "<< pRPPositions->getRPDistanceToBeamPipeCenter(it->first)<<std::endl  
 	      <<" offset " << (it->second).getOffset()<<std::endl
 	      <<" motor " << (it->second).getRawMotor()<<std::endl
-	      <<" lvd    " << (it->second).getRawLVD()<<std::endl
+	      <<" lvdt    " << (it->second).getRawLVDT()<<std::endl
 	      <<" resolver " << (it->second).getRawResolver()<<std::endl
 	      <<std::endl;
    
