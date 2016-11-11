@@ -64,6 +64,7 @@ namespace cond {
       IMPORT_PAYLOAD_CASE( CSCL1TPParameters )
       IMPORT_PAYLOAD_CASE( CSCRecoDigiParameters )
       IMPORT_PAYLOAD_CASE( CTPPSRPPositions )
+      IMPORT_PAYLOAD_CASE( CTPPSPixelGainCalibration )
       IMPORT_PAYLOAD_CASE( CastorChannelQuality )
       IMPORT_PAYLOAD_CASE( CastorElectronicsMap )
       IMPORT_PAYLOAD_CASE( CastorGainWidths )
