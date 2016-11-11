@@ -50,6 +50,7 @@ namespace cond {
       FETCH_PAYLOAD_CASE( CSCL1TPParameters )
       FETCH_PAYLOAD_CASE( CSCRecoDigiParameters )
       FETCH_PAYLOAD_CASE( CTPPSRPPositions )
+      FETCH_PAYLOAD_CASE( CTPPSPixelGainCalibration )
       FETCH_PAYLOAD_CASE( CastorChannelQuality )
       FETCH_PAYLOAD_CASE( CastorElectronicsMap )
       FETCH_PAYLOAD_CASE( CastorGainWidths )
