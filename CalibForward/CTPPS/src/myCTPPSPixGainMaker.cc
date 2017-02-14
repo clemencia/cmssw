@@ -1,4 +1,4 @@
-1;2c// -*- C++ -*-
+// -*- C++ -*-
 //
 // Package:    CalibForward/CTPPS
 // Class:      myCTPPSPixGainMaker
@@ -33,7 +33,7 @@
 //CTPPS Gain Calibration Conditions Object 
 #include "CondFormats/CTPPSObjects/interface/CTPPSPixelGainCalibration.h"
 //CTPPS tracker DetId
-#include "DataFormats/CTPPSDetId/interface/CTPPSTrackerDetId.h"
+#include "DataFormats/CTPPSDetId/interface/CTPPSPixelDetId.h"
 #include "TFile.h"
 
 //
@@ -134,9 +134,9 @@ myCTPPSPixGainMaker::getHistos()
   std::cout <<"Parsing file " <<m_inputHistosFileName << std::endl;
   m_inputRootFile = new TFile(m_inputHistosFileName.c_str());
   m_inputRootFile->cd();
-  TDirectory *dir = m_inputRootFile_->GetDirectory("siPixelGainCalibrationAnalysis");
+  TDirectory *dir = m_inputRootFile->GetDirectory("siPixelGainCalibrationAnalysis");
   TList *list = dir->GetListOfKeys();
-
+  list->Print();
 }
 
 
@@ -160,8 +160,8 @@ myCTPPSPixGainMaker::fillDB()
       i++;
   }
   CTPPSPixelGainCalibration::Range range(theCTPPSPixelGainCalibPerPixel.begin(),theCTPPSPixelGainCalibPerPixel.end());
-  CTPPSTrackerDetId myid020(/*arm*/0,/*station*/0,/*pot*/2,/*plane*/0);
-  //  CTPPSTrackerDetId myid135(    1,           0,       3,         5);
+  CTPPSPixelDetId myid020(/*arm*/0,/*station*/0,/*pot*/2,/*plane*/0);
+  //  CTPPSPixelDetId myid135(    1,           0,       3,         5);
   int ncols=52;
   //int nrows=80;
   if(!theGainCalibrationDbInput1.put(myid020.rawId(),range,ncols))
