@@ -40,7 +40,7 @@ CTPPSPixelGainCalibration::CTPPSPixelGainCalibration(float minPed, float maxPed,
 }
 //
 
-CTPPSPixelGainCalibration::CTPPSPixelGainCalibration(const uint32_t& detid,std::vector<float> & peds, std::vector<float>& gains, float minPed, float maxPed,float minGain, float maxGain) :
+CTPPSPixelGainCalibration::CTPPSPixelGainCalibration(const uint32_t& detid, const std::vector<float> & peds, const std::vector<float>& gains, float minPed, float maxPed,float minGain, float maxGain) :
   minPed_(minPed),
   maxPed_(maxPed),
   minGain_(minGain),
@@ -56,7 +56,7 @@ CTPPSPixelGainCalibration::CTPPSPixelGainCalibration(const uint32_t& detid,std::
   setGainsPeds(detid,peds,gains);
 }
 
-void CTPPSPixelGainCalibration::setGainsPeds(const uint32_t& detid,std::vector<float> & peds, std::vector<float>& gains){
+void CTPPSPixelGainCalibration::setGainsPeds(const uint32_t& detid, const std::vector<float> & peds, const std::vector<float>& gains){
   int sensorSize=peds.size();
   int gainsSize=gains.size();
   if(gainsSize!=sensorSize)
@@ -68,7 +68,7 @@ void CTPPSPixelGainCalibration::setGainsPeds(const uint32_t& detid,std::vector<f
   myreg.ibegin=0;
   myreg.iend=sensorSize;
   myreg.ncols=sensorSize/160; // each ROC is made of 80 rows and 52 columns, each sensor is made of 160 rows and either 104 or 156 columns (2x2 or 2x3 ROCs)
-  indexes.push_back(myreg);
+  indexes = myreg;
   for(int i = 0 ; i<sensorSize ; ++i)  
     putData(i,peds[i],gains[i]);
 }
@@ -78,7 +78,7 @@ void CTPPSPixelGainCalibration::putData(uint32_t ipix, float ped, float gain){
     {
       if (ped>=0 && gain>=0)
 	throw cms::Exception("CTPPSPixelGainCalibration fill error")
-	  << "[CTPPSPixelGainCalibration::putData] attemptint to fill the vectors that are already filled detid = " << indexes[0].detid << " ipix " << ipix;
+	  << "[CTPPSPixelGainCalibration::putData] attemptint to fill the vectors that are already filled detid = " << indexes.detid << " ipix " << ipix;
       else   // in case it is for setting the noisy or dead flag of already filled pixel
 	{
 	  std::cout<<"resetting pixel calibration for noisy or dead flag"<<std::endl;
@@ -87,7 +87,7 @@ void CTPPSPixelGainCalibration::putData(uint32_t ipix, float ped, float gain){
     }
   else if (v_pedestals.size()<ipix)
     throw cms::Exception("CTPPSPixelGainCalibration fill error")
-      << "[CTPPSPixelGainCalibration::putData] the order got scrambled detid = "<< indexes[0].detid << " ipix " << ipix;
+      << "[CTPPSPixelGainCalibration::putData] the order got scrambled detid = "<< indexes.detid << " ipix " << ipix;
   else{ //the size has to match exactly the index, the index - 0 pixel starts the vector, the one with index 1 should be pushed back in a vector of size== 1 (to become size==2) so on and o forth
     v_pedestals.push_back(ped);
     v_gains.push_back(gain);
@@ -197,18 +197,18 @@ float CTPPSPixelGainCalibration::getPed(const int& col, const int& row /*, const
 
   //  int nRows = (range.second-range.first)/2 / nCols;
   //const DecodingStructure & s = (const DecodingStructure & ) *(range.first+(col*nRows + row)*2);
-  int nCols=indexes[0].ncols;
-  int nRows=v_pedestals.size()/nCols;
+  int nCols=indexes.ncols;
+  int nRows=v_pedestals.size()/nCols; // should be =160
   if (col >= nCols || row >= nRows){
     throw cms::Exception("CorruptedData")
       << "[CTPPSPixelGainCalibration::getPed] Pixel out of range: col " << col << " row " << row;
   }  
   int ipix=nRows*col+row;
-  getPed(ipix,isDead,isNoisy);
+  return   getPed(ipix,isDead,isNoisy);
 }
 
 
-float getPed(uint32_t ipix,bool& isDead, bool&isNoisy) const {
+float CTPPSPixelGainCalibration::getPed(const uint32_t ipix,bool& isDead, bool&isNoisy) const {
 
   if (v_pedestals[ipix] == -999.0)
     isDead = true;  
@@ -225,19 +225,27 @@ float CTPPSPixelGainCalibration::getGain(const int& col, const int& row /*, cons
 
   //  int nRows = (range.second-range.first)/2 / nCols;
   //  const DecodingStructure & s = (const DecodingStructure & ) *(range.first+(col*nRows + row)*2);
-  int nCols=indexes[0].nCols;
+  int nCols=indexes.ncols;
   int nRows=v_pedestals.size()/nCols; // should be 160
   if (col >= nCols || row >= nRows){
     throw cms::Exception("CorruptedData")
       << "[CTPPSPixelGainCalibration::getPed] Pixel out of range: col " << col << " row " << row;
   }  
   int ipix=row+nRows*col;
+  return getGain(ipix,isDead,isNoisy);
+}
+
+float CTPPSPixelGainCalibration::getGain(const uint32_t ipix,bool& isDead, bool&isNoisy) const {
+
   if (v_pedestals[ipix] == -999. )
      isDead = true;  
   if (v_gains[ipix] == -9999.)
      isNoisy = true;
-  return decodeGain(s.gain & 0xFF);
+  return v_gains[ipix];
+
 }
+
+
 
 // float CTPPSPixelGainCalibration::encodeGain( const float& gain ) {
   

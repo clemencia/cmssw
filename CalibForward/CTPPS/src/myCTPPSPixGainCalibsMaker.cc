@@ -1,26 +1,3 @@
-// -*- C++ -*-
-//
-// Package:    CalibForward/CTPPS
-// Class:      myCTPPSPixGainMaker
-// 
-/**\class myCTPPSPixGainMaker myCTPPSPixGainMaker.cc CalibForward/CTPPS/plugins/myCTPPSPixGainMaker.cc
-
- Description: analyzer to create SQlite for CTPPS Pixel Gain Calibration
-
- Implementation:
-     Adapted from SiPixelGainCalibrationReadDQMFile 
-*/
-//
-// Original Author:  Clemencia Mora Herrera
-//         Created:  Fri, 11 Nov 2016 18:20:06 GMT
-//
-//
-
-
-// system include files
-#include <memory>
-
-// user include files
 #include "FWCore/Framework/interface/Frameworkfwd.h"
 #include "FWCore/Framework/interface/one/EDAnalyzer.h"
 
@@ -31,21 +8,22 @@
 #include "FWCore/ServiceRegistry/interface/Service.h"
 #include "CondCore/DBOutputService/interface/PoolDBOutputService.h"
 //CTPPS Gain Calibration Conditions Object 
-#include "CondFormats/CTPPSObjects/interface/CTPPSPixelGainCalibration.h"
+#include "CondFormats/CTPPSObjects/interface/CTPPSPixelGainCalibrations.h"
 //CTPPS tracker DetId
 #include "DataFormats/CTPPSDetId/interface/CTPPSPixelDetId.h"
 #include "TFile.h"
+#include "TH2F.h"
 
 //
 // class declaration
 //
 
 
-class myCTPPSPixGainMaker : public edm::one::EDAnalyzer<>  
+class myCTPPSPixGainCalibsMaker : public edm::one::EDAnalyzer<>  
 {
  public:
-  explicit myCTPPSPixGainMaker(const edm::ParameterSet&);
-  ~myCTPPSPixGainMaker();
+  explicit myCTPPSPixGainCalibsMaker(const edm::ParameterSet&);
+  ~myCTPPSPixGainCalibsMaker();
   
   static void fillDescriptions(edm::ConfigurationDescriptions& descriptions);
   
@@ -62,26 +40,19 @@ class myCTPPSPixGainMaker : public edm::one::EDAnalyzer<>
   TFile * m_inputRootFile;
 };
 
-//
-// constants, enums and typedefs
-//
-
-//
-// static data member definitions
-//
 
 //
 // constructors and destructor
 //
-myCTPPSPixGainMaker::myCTPPSPixGainMaker(const edm::ParameterSet& iConfig):   
-  m_record(iConfig.getUntrackedParameter<std::string>("record","CTPPSPixelGainCalibrationRcd")),
+myCTPPSPixGainCalibsMaker::myCTPPSPixGainCalibsMaker(const edm::ParameterSet& iConfig):   
+  m_record(iConfig.getUntrackedParameter<std::string>("record","CTPPSPixelGainCalibrationsRcd")),
   m_inputHistosFileName(iConfig.getUntrackedParameter<std::string>("inputrootfile","inputfile.root"))
 {
 
 }
 
 
-myCTPPSPixGainMaker::~myCTPPSPixGainMaker()
+myCTPPSPixGainCalibsMaker::~myCTPPSPixGainCalibsMaker()
 {
  
    // do anything here that needs to be done at desctruction time
@@ -89,14 +60,13 @@ myCTPPSPixGainMaker::~myCTPPSPixGainMaker()
 
 }
 
-
 //
 // member functions
 //
 
 // ------------ method called for each event  ------------
 void
-myCTPPSPixGainMaker::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
+myCTPPSPixGainCalibsMaker::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 {
   //   using namespace edm;
 
@@ -105,13 +75,14 @@ myCTPPSPixGainMaker::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 
 // ------------ method called once each job just before starting event loop  ------------
 void 
-myCTPPSPixGainMaker::beginJob()
+myCTPPSPixGainCalibsMaker::beginJob()
 {
 }
 
+
 // ------------ method called once each job just after ending the event loop  ------------
 void 
-myCTPPSPixGainMaker::endJob() 
+myCTPPSPixGainCalibsMaker::endJob() 
 {
   getHistos();
   fillDB();
@@ -119,7 +90,7 @@ myCTPPSPixGainMaker::endJob()
 
 // ------------ method fills 'descriptions' with the allowed parameters for the module  ------------
 void
-myCTPPSPixGainMaker::fillDescriptions(edm::ConfigurationDescriptions& descriptions) {
+myCTPPSPixGainCalibsMaker::fillDescriptions(edm::ConfigurationDescriptions& descriptions) {
   //The following says we do not know what parameters are allowed so do no validation
   // Please change this to state exactly what you do use, even if it is no parameters
   edm::ParameterSetDescription desc;
@@ -129,7 +100,7 @@ myCTPPSPixGainMaker::fillDescriptions(edm::ConfigurationDescriptions& descriptio
 
 
 void 
-myCTPPSPixGainMaker::getHistos() 
+myCTPPSPixGainCalibsMaker::getHistos() 
 {
   std::cout <<"Parsing file " <<m_inputHistosFileName << std::endl;
   m_inputRootFile = new TFile(m_inputHistosFileName.c_str());
@@ -141,44 +112,44 @@ myCTPPSPixGainMaker::getHistos()
 
 
 void 
-myCTPPSPixGainMaker::fillDB() 
+myCTPPSPixGainCalibsMaker::fillDB() 
 {
   
   
   //hardcoded values for test only
-  CTPPSPixelGainCalibration theGainCalibrationDbInput1(0.0,1.0,0.0,1.0);
-  std::vector<char> theCTPPSPixelGainCalibPerPixel;
-  std::cout<<"size of vector: "<<  theCTPPSPixelGainCalibPerPixel.size()<<std::endl;
-
-  // testing the class
-  theGainCalibrationDbInput1.setData(0.5,0.6,theCTPPSPixelGainCalibPerPixel);
-  int   vecsize=theCTPPSPixelGainCalibPerPixel.size();
-  std::cout << "size of vector: "<< vecsize<<std::endl;
-  int i=0;
-  while (i<vecsize){
-      std::cout << "vector["<< i << "]"<< theCTPPSPixelGainCalibPerPixel[i]<<std::endl;
-      i++;
-  }
-  CTPPSPixelGainCalibration::Range range(theCTPPSPixelGainCalibPerPixel.begin(),theCTPPSPixelGainCalibPerPixel.end());
+  CTPPSPixelGainCalibrations * gainCalibsTest = new CTPPSPixelGainCalibrations();
+  
   CTPPSPixelDetId myid020(/*arm*/0,/*station*/0,/*pot*/2,/*plane*/0);
-  //  CTPPSPixelDetId myid135(    1,           0,       3,         5);
-  int ncols=52;
-  //int nrows=80;
-  if(!theGainCalibrationDbInput1.put(myid020.rawId(),range,ncols))
-    edm::LogError("CTPPSPixelGainCalibrationAnalysis")<<"warning: detid already exists for Offline calibration database"<<std::endl;
 
+  std::vector<float> fakegains,fakepeds;
+
+  TH2F * testgains = (TH2F*)m_inputRootFile->Get("siPixelGainCalibrationAnalysis/Pixel/Barrel/Shell_pO/Layer_1/Ladder_07F/Module_1/Gain2d_siPixelCalibDigis_302058516");
+  TH2F * testpeds  = (TH2F*)m_inputRootFile->Get("siPixelGainCalibrationAnalysis/Pixel/Barrel/Shell_pO/Layer_1/Ladder_07F/Module_1/Pedestal2d_siPixelCalibDigis_302058516");
+  int ncols = testgains->GetNbinsX();
+  int nrows = testgains->GetNbinsY();
+  if (nrows != 160)
+    std::cout<<"Something wrong ncols = "<< ncols << " and nrows = " << nrows <<std::endl;
+
+  ncols = ncols>156 ? 156:nrows;  // the example is from central pixels, adapt it to CTPPS pixels 160x156 max
+  
+  for (int irow = 1; irow <= nrows ; ++irow) // when scanning through the 2d histo make sure to avoid underflow bin i or j =0
+    for (int jcol = 1 ; jcol <= ncols ; ++jcol){
+      fakegains.push_back(testgains->GetBinContent(jcol,irow));
+      fakepeds.push_back(testpeds->GetBinContent(jcol,irow));
+    }
+
+  gainCalibsTest->setGainCalibration(myid020.rawId(),fakepeds,fakegains);
+  
   edm::Service<cond::service::PoolDBOutputService> mydbservice;
   if(!mydbservice.isAvailable() ){
     edm::LogError("db service unavailable");
     return;
   }
-  mydbservice->writeOne(&theGainCalibrationDbInput1, mydbservice->currentTime(), m_record  );
+  mydbservice->writeOne(&gainCalibsTest, mydbservice->currentTime(), m_record  );
   
-  
+
 }
 
 
-
-
 //define this as a plug-in
-DEFINE_FWK_MODULE(myCTPPSPixGainMaker);
+DEFINE_FWK_MODULE(myCTPPSPixGainCalibsMaker);

@@ -27,7 +27,7 @@
 #include "CondFormats/CSCObjects/interface/CSCDDUMap.h"
 #include "CondFormats/CSCObjects/interface/CSCL1TPParameters.h"
 #include "CondFormats/CTPPSObjects/interface/CTPPSRPPositions.h"
-#include "CondFormats/CTPPSObjects/interface/CTPPSPixelGainCalibration.h"
+#include "CondFormats/CTPPSObjects/interface/CTPPSPixelGainCalibrations.h"
 #include "CondFormats/DTObjects/interface/DTCCBConfig.h"
 #include "CondFormats/DTObjects/interface/DTDeadFlag.h"
 #include "CondFormats/DTObjects/interface/DTHVStatus.h"

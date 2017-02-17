@@ -39,26 +39,26 @@ class CTPPSPixelGainCalibration {
     COND_SERIALIZABLE;
   };
   
-  class StrictWeakOrdering{
-  public:
-    bool operator() (const DetRegistry& p,const uint32_t& i) const {return p.detid < i;}
-  };
+  /* class StrictWeakOrdering{ */
+  /* public: */
+  /*   bool operator() (const DetRegistry& p,const uint32_t& i) const {return p.detid < i;} */
+  /* }; */
   
-  typedef std::vector<float>::const_iterator                ContainerIterator;  
-  typedef std::pair<ContainerIterator, ContainerIterator>  Range;      
-  typedef std::vector<DetRegistry>                         Registry;
-  typedef Registry::const_iterator                         RegistryIterator;
+  /* typedef std::vector<float>::const_iterator                ContainerIterator;   */
+  /* typedef std::pair<ContainerIterator, ContainerIterator>  Range;       */
+  /* typedef std::vector<DetRegistry>                         Registry; */
+  /* typedef Registry::const_iterator                         RegistryIterator; */
   
   // Constructors
   CTPPSPixelGainCalibration();
   CTPPSPixelGainCalibration(float minPed, float maxPed, float minGain, float maxGain);
-  CTPPSPixelGainCalibration(const uint32_t& detid, std::vector<float>& peds, std::vector<float>& gains, 
+  CTPPSPixelGainCalibration(const uint32_t& detid, const std::vector<float>& peds, const std::vector<float>& gains, 
 			    float minPed=0., float maxPed=255., float minGain=0., float maxGain=255.);
   ~CTPPSPixelGainCalibration(){}
 
   void initialize(){}
 
-  void setGainsPeds(const uint32_t& detId, std::vector<float>& peds, std::vector<float>& gains);
+  void setGainsPeds(const uint32_t& detId, const std::vector<float>& peds, const std::vector<float>& gains);
   /* bool  put(const uint32_t& detID,Range input, const int& nCols); */
   /* const Range getRange(const uint32_t& detID) const; */
   /* void  getDetIds(std::vector<uint32_t>& DetIds_) const; */
@@ -80,8 +80,10 @@ class CTPPSPixelGainCalibration {
 
   void putData(uint32_t ipix, float ped, float gain);
 
-  float getPed   (const int& col, const int& row, const Range& range, const int& nCols, bool& isDead, bool& isNoisy) const;
-  float getGain  (const int& col, const int& row, const Range& range, const int& nCols, bool& isDead, bool& isNoisy) const;
+  float getPed   (const int& col, const int& row /*, const Range& range, const int& nCols */, bool& isDead, bool& isNoisy) const;
+  float getGain  (const int& col, const int& row /*, const Range& range, const int& nCols */, bool& isDead, bool& isNoisy) const;
+  float getPed   (const uint32_t ipix, bool& isDead, bool& isNoisy)const;
+  float getGain  (const uint32_t ipix, bool& isDead, bool& isNoisy)const;
 
   private:
 
@@ -93,7 +95,7 @@ class CTPPSPixelGainCalibration {
 
   std::vector<float> v_pedestals; 
   std::vector<float> v_gains;
-  std::vector<DetRegistry> indexes;
+  DetRegistry indexes;
   //I'd make it a single detRegistry w/ detID and collection of indices 
   float  minPed_, maxPed_, minGain_, maxGain_;
 

@@ -1,15 +1,15 @@
 // -*- C++ -*-
 //
 // Package:     CondFormats/DataRecord
-// Class  :     CTPPSPixelGainCalibrationRcd
+// Class  :     CTPPSPixelGainCalibrationsRcd
 // 
 // Implementation:
 //     [Notes on implementation]
 //
 // Author:      Clemencia Mora Herrera
-// Created:     Fri, 11 Nov 2016 13:52:56 GMT
+// Created:     Fri, 17 Feb 2017 16:13:16 GMT
 
-#include "CondFormats/DataRecord/interface/CTPPSPixelGainCalibrationRcd.h"
+#include "CondFormats/DataRecord/interface/CTPPSPixelGainCalibrationsRcd.h"
 #include "FWCore/Framework/interface/eventsetuprecord_registration_macro.h"
 
-EVENTSETUP_RECORD_REG(CTPPSPixelGainCalibrationRcd);
+EVENTSETUP_RECORD_REG(CTPPSPixelGainCalibrationsRcd);
