@@ -1,5 +1,5 @@
-#ifndef _CTPPSRPPosition_h_
-#define _CTPPSRPPosition_h_
+#ifndef CondFormats_CTPPSObjects_CTPPSRPPosition_h
+#define CondFormats_CTPPSObjects_CTPPSRPPosition_h
 
 
 

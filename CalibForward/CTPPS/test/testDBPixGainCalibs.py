@@ -40,10 +40,10 @@ process.PoolDBOutputService = cms.Service("PoolDBOutputService",
     toPut = cms.VPSet(
         cms.PSet(
             record = cms.string('CTPPSPixelGainCalibrationsRcd'),
-            tag = cms.string('CTPPSPixelGainCalibNew_v0')
+            tag = cms.string('CTPPSPixelGainCalibNew_v1')
             )
         ),
-    connect = cms.string('sqlite_file:ctppspixnew.db')
+    connect = cms.string('sqlite_file:ctppspixnew1.db')
 )
 
 process.p = cms.Path(process.pixGainDB)

@@ -203,7 +203,7 @@ float CTPPSPixelGainCalibration::getPed(const int& col, const int& row /*, const
     throw cms::Exception("CorruptedData")
       << "[CTPPSPixelGainCalibration::getPed] Pixel out of range: col " << col << " row " << row;
   }  
-  int ipix=nRows*col+row;
+  int ipix = col + row * nCols;
   return   getPed(ipix,isDead,isNoisy);
 }
 
@@ -231,7 +231,7 @@ float CTPPSPixelGainCalibration::getGain(const int& col, const int& row /*, cons
     throw cms::Exception("CorruptedData")
       << "[CTPPSPixelGainCalibration::getPed] Pixel out of range: col " << col << " row " << row;
   }  
-  int ipix=row+nRows*col;
+  int ipix = col + row * nCols;
   return getGain(ipix,isDead,isNoisy);
 }
 

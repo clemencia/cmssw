@@ -132,10 +132,10 @@ myCTPPSPixGainCalibsMaker::fillDB()
 
   ncols = ncols>156 ? 156:nrows;  // the example is from central pixels, adapt it to CTPPS pixels 160x156 max
   
-  for (int irow = 1; irow <= nrows ; ++irow) // when scanning through the 2d histo make sure to avoid underflow bin i or j =0
-    for (int jcol = 1 ; jcol <= ncols ; ++jcol){
-      fakegains.push_back(testgains->GetBinContent(jcol,irow));
-      fakepeds.push_back(testpeds->GetBinContent(jcol,irow));
+  for (int jrow = 1; jrow <= nrows ; ++jrow) // when scanning through the 2d histo make sure to avoid underflow bin i or j ==0
+    for (int icol = 1 ; icol <= ncols ; ++icol){
+      fakegains.push_back(testgains->GetBinContent(icol,jrow));
+      fakepeds.push_back(testpeds->GetBinContent(icol,jrow));
     }
 
   gainCalibsTest->setGainCalibration(myid020.rawId(),fakepeds,fakegains);
@@ -145,8 +145,10 @@ myCTPPSPixGainCalibsMaker::fillDB()
     edm::LogError("db service unavailable");
     return;
   }
-  mydbservice->writeOne(&gainCalibsTest, mydbservice->currentTime(), m_record  );
+  mydbservice->writeOne( gainCalibsTest, mydbservice->currentTime(), m_record  );
   
+  //test also saving directly with putData and initializing from vectors, etc
+
 
 }
 

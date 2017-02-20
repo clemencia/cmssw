@@ -1,5 +1,5 @@
-#ifndef _CTPPSRPPositions_h_
-#define _CTPPSRPPositions_h_
+#ifndef CondFormats_CTPPSObjects_CTPPSRPPositions_h
+#define CondFormats_CTPPSObjects_CTPPSRPPositions_h
 
 #include "CondFormats/CTPPSObjects/interface/CTPPSRPPosition.h"
 #include "CondFormats/Serialization/interface/Serializable.h"
@@ -32,7 +32,8 @@ class CTPPSRPPositions{
   double getRPRawLVDT(unsigned int RPid) const;
   double getRPRawMotor(unsigned int RPid) const;
   double getRPRawResolver(unsigned int RPid) const;
-  double size()const {return m_positions.size();}
+  
+  int size()const {return m_positions.size();}
 
  private:
 

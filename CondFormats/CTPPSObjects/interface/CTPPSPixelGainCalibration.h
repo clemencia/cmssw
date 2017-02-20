@@ -84,7 +84,8 @@ class CTPPSPixelGainCalibration {
   float getGain  (const int& col, const int& row /*, const Range& range, const int& nCols */, bool& isDead, bool& isNoisy) const;
   float getPed   (const uint32_t ipix, bool& isDead, bool& isNoisy)const;
   float getGain  (const uint32_t ipix, bool& isDead, bool& isNoisy)const;
-
+  int   getNCols () const {return indexes.ncols;}
+  int   getIEnd  () const {return indexes.iend;}
   private:
 
   /* float   encodeGain(const float& gain); */
