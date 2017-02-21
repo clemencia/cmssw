@@ -3,7 +3,29 @@
 #include <iostream>
 
 void CTPPSPixelGainCalibrations::setGainCalibration(const uint32_t& detid, const CTPPSPixelGainCalibration & PixGains){
-  m_calibrations[detid] = PixGains;
+
+  if(detid!=PixGains.getDetId()){ // if no detid set in the pixgains
+    CTPPSPixelGainCalibration newPixGains =    PixGains; //maybe the copy works?
+    newPixGains.setIndexes(detid); //private accessor, only friend class can use it
+    std::cout << "newPixGains detId = "<< newPixGains.getDetId() 
+	      << " ; iBegin = "<< newPixGains.getIBegin()
+	      << " ; iEnd = "<< newPixGains.getIEnd()
+	      << " ; nCols = "<< newPixGains.getNCols() << std::endl;
+
+    int npix = newPixGains.getIEnd() ; 
+    bool dead,noisy;
+    if(npix!=0 )
+      std::cout << "newPixGains Ped[0] = "<< newPixGains.getPed(0,dead,noisy)
+		<< " ; Gain[0] = " << newPixGains.getGain(0,dead,noisy)
+		<< " ; dead = " << dead << " ; noisy = "<< noisy << std::endl;
+    else 
+      std::cout << "looks like it did not work, npix is "<< npix << std::endl;
+
+    m_calibrations[detid]=newPixGains;
+  }
+
+  else
+    m_calibrations[detid] = PixGains;
 }
 
 void CTPPSPixelGainCalibrations::setGainCalibration(const uint32_t& detid, const vector<float> & peds, const vector<float> & gains){

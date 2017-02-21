@@ -9,6 +9,7 @@
 #include "CondCore/DBOutputService/interface/PoolDBOutputService.h"
 //CTPPS Gain Calibration Conditions Object 
 #include "CondFormats/CTPPSObjects/interface/CTPPSPixelGainCalibrations.h"
+#include "CondFormats/CTPPSObjects/interface/CTPPSPixelGainCalibration.h"
 //CTPPS tracker DetId
 #include "DataFormats/CTPPSDetId/interface/CTPPSPixelDetId.h"
 #include "TFile.h"
@@ -107,7 +108,8 @@ myCTPPSPixGainCalibsMaker::getHistos()
   m_inputRootFile->cd();
   TDirectory *dir = m_inputRootFile->GetDirectory("siPixelGainCalibrationAnalysis");
   TList *list = dir->GetListOfKeys();
-  list->Print();
+  int ndir= list->GetEntries();
+  std::cout<<"ndir= " <<ndir<<std::endl;
 }
 
 
@@ -140,6 +142,41 @@ myCTPPSPixGainCalibsMaker::fillDB()
 
   gainCalibsTest->setGainCalibration(myid020.rawId(),fakepeds,fakegains);
   
+  /*  edm::Service<cond::service::PoolDBOutputService> mydbservice;
+  if(!mydbservice.isAvailable() ){
+    edm::LogError("db service unavailable");
+    return;
+  }
+  mydbservice->writeOne( gainCalibsTest, mydbservice->currentTime(), m_record  );
+  */
+  ////////////////////////////////////////////////////////////////////////////  
+  //test also saving directly with putData and initializing from vectors, etc
+
+  // CTPPSPixelGainCalibrations * gainCalibsTest = new CTPPSPixelGainCalibrations();
+  
+  CTPPSPixelDetId myid021(/*arm*/0,/*station*/0,/*pot*/2,/*plane*/1);
+
+  //std::vector<float> fakegains,fakepeds;
+
+  TH2F * testgains1 = (TH2F*)m_inputRootFile->Get("siPixelGainCalibrationAnalysis/Pixel/Barrel/Shell_pO/Layer_1/Ladder_07F/Module_2/Gain2d_siPixelCalibDigis_302058520");
+  TH2F * testpeds1  = (TH2F*)m_inputRootFile->Get("siPixelGainCalibrationAnalysis/Pixel/Barrel/Shell_pO/Layer_1/Ladder_07F/Module_2/Pedestal2d_siPixelCalibDigis_302058520");
+  ncols = testgains1->GetNbinsX();
+  nrows = testgains1->GetNbinsY();
+  if (nrows != 160)
+    std::cout<<"Something wrong ncols = "<< ncols << " and nrows = " << nrows <<std::endl;
+
+  ncols = ncols>156 ? 156:nrows;  // the example is from central pixels, adapt it to CTPPS pixels 160x156 max
+  
+  CTPPSPixelGainCalibration a;
+  int ipix=0;
+  for (int jrow = 1; jrow <= nrows ; ++jrow) // when scanning through the 2d histo make sure to avoid underflow bin i or j ==0
+    for (int icol = 1 ; icol <= ncols ; ++icol){
+      ipix =  (icol-1) + ncols* (jrow-1); 
+      a.putData(ipix,testpeds1->GetBinContent(icol,jrow),testgains1->GetBinContent(icol,jrow));
+    }
+
+  gainCalibsTest->setGainCalibration(myid021.rawId(),a);
+  
   edm::Service<cond::service::PoolDBOutputService> mydbservice;
   if(!mydbservice.isAvailable() ){
     edm::LogError("db service unavailable");
@@ -147,8 +184,6 @@ myCTPPSPixGainCalibsMaker::fillDB()
   }
   mydbservice->writeOne( gainCalibsTest, mydbservice->currentTime(), m_record  );
   
-  //test also saving directly with putData and initializing from vectors, etc
-
 
 }
 
