@@ -8,6 +8,3 @@
 <library   file="myCTPPSRPPosESAnalyzer.cc" name="myCTPPSRPPosESAnalyzer">
    <flags   EDM_PLUGIN="1"/>
 </library>
-<library   file="myCTPPSPixGainCalibsESAnalyzer.cc" name="myCTPPSPixGainCalibsESAnalyzer">
-   <flags   EDM_PLUGIN="1"/>
-</library>

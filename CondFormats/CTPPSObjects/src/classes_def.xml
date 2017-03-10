@@ -4,7 +4,4 @@
        </class>
        <class name="CTPPSRPPosition"/>
        <class name="std::map<unsigned int,CTPPSRPPosition>"/>
-       <class name="CTPPSPixelGainCalibrations" class_version="0">
-	 <field name="m_calibrations" mapping="blob"/>
-       </class>
 </lcgdict> 
