@@ -6,8 +6,6 @@ int main()
 {
   // testSerialization<CTPPSAlignmentCorrections>();
   testSerialization<CTPPSRPPositions>();
-  testSerialization<CTPPSPixelGainCalibration>();
-  testSerialization<CTPPSPixelGainCalibrations>();
 
   return 0;
 }
