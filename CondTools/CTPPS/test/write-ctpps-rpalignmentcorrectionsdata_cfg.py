@@ -16,7 +16,7 @@ process.source = cms.Source("EmptyIOVSource",
 
 # load a mapping
 process.load("CondFormats.CTPPSReadoutObjects.CTPPSRPAlignmentCorrectionsDataESSourceXML_cfi")
-process.ctppsRPAlignmentCorrectionsDataESSourceXML.XMLFile = cms.string("CondFormats/CTPPSReadoutObjects/test/sample_alignment_corrections.xml")
+process.ctppsRPAlignmentCorrectionsDataESSourceXML.XMLFile = cms.string("CondFormats/CTPPSReadoutObjects/xml/sample_alignment_corrections.xml")
 
 
 #Database output service
