@@ -43,6 +43,9 @@ class WriteCTPPSPixGainCalibrations : public edm::one::EDAnalyzer<>
   // ----------Member data ---------------------------
   std::string m_record;
   std::string m_inputHistosFileName;
+  bool m_usedummy;
+  int npfitmin;
+  double gainlow,gainhigh;
   TFile * m_inputRootFile;
   std::map<uint32_t, std::vector<std::string> > detidHistoNameMap;
   //  std::map<uint32_t, std::vector<std::string> > detidSlopeNameMap;
@@ -58,7 +61,11 @@ class WriteCTPPSPixGainCalibrations : public edm::one::EDAnalyzer<>
 //
 WriteCTPPSPixGainCalibrations::WriteCTPPSPixGainCalibrations(const edm::ParameterSet& iConfig):   
   m_record(iConfig.getUntrackedParameter<std::string>("record","CTPPSPixelGainCalibrationsRcd")),
-  m_inputHistosFileName(iConfig.getUntrackedParameter<std::string>("inputrootfile","inputfile.root"))
+  m_inputHistosFileName(iConfig.getUntrackedParameter<std::string>("inputrootfile","inputfile.root")),
+  m_usedummy(iConfig.getUntrackedParameter<bool>("useDummyValues",true)),
+  npfitmin(iConfig.getUntrackedParameter<int>("minimumNpfit",3)),
+  gainlow(iConfig.getUntrackedParameter<double>("gainLowLimit",0.0)),
+  gainhigh(iConfig.getUntrackedParameter<double>("gainHighLimit",100.0))
 {
 
 }
@@ -119,43 +126,44 @@ WriteCTPPSPixGainCalibrations::getHistos()
   m_inputRootFile->cd();
 
 
-  int sector[2] = {45,56};
-  int station[1]={2};
-  int pot[1]={3};
-  
+  int sector[2] = {45,56}; // arm 0 is sector 45 and arm 1 is sector 56
+  int nsec = 2;
+  int station[2]={0,2}; // for each arm 
+  int nst = 2 ;
+  //int pot[6]={3}; // index of the pot within the 6 pot configuration (vertical top or bottom and horizontal)
+  int npt = 6;
 
-  for(int arm=0 ; arm<2 ; arm++)
-    for(int plane=0 ; plane<6 ; plane++){
-      CTPPSPixelDetId mytempid(arm,station[0],pot[0],plane);
-      //      std::vector<std::string> slopenamevec;
-      //      std::vector<std::string> intrcptnamevec;
-      std::vector<std::string> histnamevec;
-      std::vector<int> listrocs;
-      for(int roc=0 ; roc<6 ; roc++){
-	char temppathhistos[200];
-	//	char temppathintercept[200];
-	int i = arm;
-	//	sprintf(temppathslope,"CTPPS/CTPPS_SEC%d/CTPPS_SEC%d_RP%d%d%d/CTPPS_SEC%d_RP%d%d%d_PLN%d/CTPPS_SEC%d_RP%d%d%d_PLN%d_ROC%d_Slope2D",sector[i],sector[i],arm,station[0],pot[0],sector[i],arm,station[0],pot[0],plane,sector[i],arm,station[0],pot[0],plane,roc);
-
-	//	sprintf(temppathintercept,"CTPPS/CTPPS_SEC%d/CTPPS_SEC%d_RP%d%d%d/CTPPS_SEC%d_RP%d%d%d_PLN%d/CTPPS_SEC%d_RP%d%d%d_PLN%d_ROC%d_Intercept2D",sector[i],sector[i],arm,station[0],pot[0],sector[i],arm,station[0],pot[0],plane,sector[i],arm,station[0],pot[0],plane,roc);
-
-	sprintf(temppathhistos,"CTPPS/CTPPS_SEC%d/CTPPS_SEC%d_RP%d%d%d/CTPPS_SEC%d_RP%d%d%d_PLN%d/CTPPS_SEC%d_RP%d%d%d_PLN%d_ROC%d",sector[i],sector[i],arm,station[0],pot[0],sector[i],arm,station[0],pot[0],plane,sector[i],arm,station[0],pot[0],plane,roc);
-
-        std::string pathhistos(temppathhistos);
-	std::string pathslope    = pathhistos + "_Slope2D";
-       	std::string pathintercept= pathhistos + "_Intercept2D";
-	if( m_inputRootFile->Get(pathslope.c_str()) &&  m_inputRootFile->Get(pathintercept.c_str())){
-	  //	  slopenamevec.push_back(pathslope);
-	  //	  intrcptnamevec.push_back(pathintercept);
-	  histnamevec.push_back(pathhistos);
-	  listrocs.push_back(roc);
+  for(int i=0 ; i<nsec ; i++)
+    for(int st=0 ; st < nst ; st ++)
+      for(int pot = 0 ; pot < npt ; pot++){
+	int arm =i;
+	char temppathrp[100];
+	sprintf(temppathrp,"CTPPS/CTPPS_SEC%d/CTPPS_SEC%d_RP%d%d%d",sector[i],sector[i],arm,station[st],pot);
+	if(m_inputRootFile->Get(temppathrp)){
+	  for(int plane=0 ; plane<6 ; plane++){
+	    CTPPSPixelDetId mytempid(arm,station[st],pot,plane);
+	    std::vector<std::string> histnamevec;
+	    std::vector<int> listrocs;
+	    for(int roc=0 ; roc<6 ; roc++){
+	      char temppathhistos[200];
+	      
+	      sprintf(temppathhistos,"CTPPS/CTPPS_SEC%d/CTPPS_SEC%d_RP%d%d%d/CTPPS_SEC%d_RP%d%d%d_PLN%d/CTPPS_SEC%d_RP%d%d%d_PLN%d_ROC%d",
+		      sector[i],sector[i],arm,station[st],pot,sector[i],arm,station[st],pot,plane,sector[i],arm,station[st],pot,plane,roc);
+	      
+	      std::string pathhistos(temppathhistos);
+	      std::string pathslope    = pathhistos + "_Slope2D";
+	      std::string pathintercept= pathhistos + "_Intercept2D";
+	      if( m_inputRootFile->Get(pathslope.c_str()) &&  m_inputRootFile->Get(pathintercept.c_str())){
+		histnamevec.push_back(pathhistos);
+		listrocs.push_back(roc);
+	      }
+	    }
+	    detidHistoNameMap[mytempid.rawId()]      = histnamevec;
+	    detidROCsPresent[mytempid.rawId()]      = listrocs;
+	    std::cout << "Raw DetId = "<< mytempid.rawId() <<" Arm = "<< arm << " Sector = "<< sector[arm] << " Station = "<< station[st] << " Pot = "<<pot << " Plane = "<<plane  <<std::endl;
+	  }
 	}
       }
-      detidHistoNameMap[mytempid.rawId()]      = histnamevec;
-      //      detidSlopeNameMap[mytempid.rawId()]     = slopenamevec;
-      //      detidInterceptNameMap[mytempid.rawId()] = intrcptnamevec;
-      detidROCsPresent[mytempid.rawId()]      = listrocs;
-    }
 }
 
   
@@ -186,9 +194,6 @@ WriteCTPPSPixGainCalibrations::fillDB()
 
 	 }
 
-	 //	 if(gainsFromHistos.size()!=nrocs*52*80)
-	   //call msg logger
-	   //std::cout<<"Something is wrong"<< gainsFromHistos.size()<<std::endl;
 
 	 std::vector<float> orderedGains;
 	 std::vector<float> orderedPeds;
@@ -201,12 +206,10 @@ WriteCTPPSPixGainCalibrations::fillDB()
 	   tempPGCalib.putData(k,tmpped,tmpgain);
 	 }
 
-	 //call msg logger
-	 //	 std::cout << "N ROCs = "<<  nrocs<< " N pixels = "<< orderedPeds.size()<< std::endl;
 	 gainCalibsTest->setGainCalibration(tempdetid,orderedPeds,orderedGains);
 	 gainCalibsTest1->setGainCalibration(tempdetid,tempPGCalib);
   }
-  std::cout<<" Here 3!"<<std::endl;
+  //  std::cout<<" Here 3!"<<std::endl;
   edm::Service<cond::service::PoolDBOutputService> mydbservice;
   if(!mydbservice.isAvailable() ){
     edm::LogError("db service unavailable");
@@ -240,23 +243,18 @@ WriteCTPPSPixGainCalibrations::getGainsPedsFromHistos(uint32_t detid, int ROCind
       double tmpped  = tempintrcpt->GetBinContent(icol+1,jrow+1);
       // check for noisy/badly calibrated pixels
       int tmpnpfit = tempnpfit -> GetBinContent(icol+1,jrow+1);
-      double tmpchi2  = tempchi2 -> GetBinContent(icol+1,jrow+1);
-      // if (tmpnpfit ==0 ){ // dead channel
-      // 	std::cout << "I declare this channel dead! tmpped = "<< tmpped <<" tmpgain =" << tmpgain<< " and tmpnpfit =" <<tmpnpfit << " and tmpchi2= "<< tmpchi2<<std::endl;
-      // 	std::cout << " Dead Pixel column icol = "<<icol <<" and jrow = "<<jrow <<" Name="<< tmpslopename <<std::endl;
-      // 	tmpped = -9999.0;
-      // }
-      // else if((tmpgain <= -2.0 && tmpnpfit < 7) || tmpnpfit < 4 ){
-      // 	std::cout << "I declare this channel noisy! tmpped = "<< tmpped <<" tmpgain=" << tmpgain<< " and tmpnpfit =" <<tmpnpfit << " and tmpchi2= "<< tmpchi2<<std::endl; 
-      // 	std::cout << "Noisy Pixel column icol = "<<icol <<" and jrow = "<<jrow <<" Name="<< tmpslopename <<std::endl;
-      // 	tmpgain = -9999.0;
-      // }
-      if (tmpnpfit <3) {
-	std::cout << " *** Badly calibrated pixel, NPoints = "<<tmpnpfit << " setting dummy values gain = 0.5 and  ped =20.0 ***" <<std::endl;
-	std::cout << " **** Dead Pixel column icol = "<<icol <<" and jrow = "<<jrow <<" Name= "<< tmpslopename <<std::endl; 
-	tmpgain =1.0/2.0;
-	tmpped = 20.0;
-      }	
+      //double tmpchi2  = tempchi2 -> GetBinContent(icol+1,jrow+1);
+      if (tmpnpfit < npfitmin || tmpgain < gainlow || tmpgain > gainhigh) {
+	//	std::cout << " *** Badly calibrated pixel, NPoints = "<<tmpnpfit << " setting dummy values gain = 0.5 and  ped =20.0 ***" <<std::endl;
+	//	std::cout << " **** bad Pixel column icol = "<<icol <<" and jrow = "<<jrow <<" Name= "<< tmpslopename <<std::endl; 
+	if(m_usedummy){
+	  tmpgain =1.0/2.0;
+	  tmpped = 20.0;
+	}
+        // else  leave as is and set noisy in mask?	  
+      }
+      
+
       gains.push_back(tmpgain);
       peds.push_back(tmpped);
       int modCol=-1;
