@@ -2,6 +2,12 @@
 <use   name="CondFormats/CTPPSReadoutObjects"/>
 <use   name="CondCore/DBOutputService"/>
 <use   name="FWCore/ServiceRegistry"/>
+<use   name="FWCore/ParameterSet"/>
+<use   name="CondCore/PopCon"/>
+<use   name="CondFormats/Common"/>
 <use   name="root"/>
 <use   name="rootcore"/>
-<flags EDM_PLUGIN="1"/>
+
+<export>
+  <lib   name="1"/>
+</export>

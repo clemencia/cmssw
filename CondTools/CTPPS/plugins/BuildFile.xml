@@ -1,10 +1,20 @@
-<use   name="CondFormats/CTPPSReadoutObjects"/>
+<use   name="CondTools/CTPPS"/>
 <use   name="CondCore/PopCon"/>
+<use   name="CondFormats/CTPPSReadoutObjects"/>
 <use   name="CondCore/CondDB"/>
 <use   name="CondCore/DBOutputService"/>
+<use   name="CondFormats/Common"/>
+<use   name="CondFormats/DataRecord"/>
 <use   name="FWCore/Framework"/>
 <use   name="FWCore/PluginManager"/>
 <use   name="FWCore/ServiceRegistry"/>
 <use   name="FWCore/ParameterSet"/>
-<use   name="CondFormats/DataRecord"/>
-<flags   EDM_PLUGIN="1"/>
+<library file="CTPPSOpticsParamRootFileEventSetupAnalyzer.cc" name="CTPPSOpticsParamRootFileEventSetupAnalyzer">
+  <flags EDM_PLUGIN="1"/>
+</library>
+<library file="CTPPSPixelDAQMappingAnalyzer.cc" name="CTPPSPixelDAQMappingAnalyzer">
+  <flags EDM_PLUGIN="1"/>
+</library>
+<library   file="CTPPSOpticsParamRootFilePopConAnalyzer.cc" name="CondToolsCTPPSOpticsParamRootFilePopConAnalyzer">
+  <flags EDM_PLUGIN="1"/>
+</library>
