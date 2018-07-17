@@ -1,4 +1,11 @@
 import FWCore.ParameterSet.Config as cms
+import sys
+
+arguments=sys.argv
+
+rootfilename = "parametrisation.root"
+if len(arguments)>2:
+    rootfilename=arguments[2]
 
 process = cms.Process("TEST")
 
@@ -34,7 +41,7 @@ process.ctppsOpticsParamRootFileTest = cms.EDAnalyzer("CTPPSOpticsParamRootFileP
                                            record = cms.string('FileBlob'),
                                            loggingOn = cms.untracked.bool(True), #always True, needs to create the log db
                                            SinceAppendMode = cms.bool(True),
-                                           Source = cms.PSet(ROOTFile = cms.untracked.string("parametrisation.root"),
+                                           Source = cms.PSet(ROOTFile = cms.untracked.string(rootfilename),
                                                              firstSince = cms.untracked.uint64(1), #1, 43434, 46335, 51493, 51500
                                                              debug = cms.untracked.bool(True)
                                                              )

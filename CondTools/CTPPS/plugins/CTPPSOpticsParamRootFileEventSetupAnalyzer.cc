@@ -79,7 +79,9 @@ namespace edmtest {
 	// DQMStore *dqm = &*edm::Service<DQMStore>();
 	// dqm->open(outfile, false, "", "Reference");
  	// remove(outfile.c_str());
-	
+
+	TFile f("testfile.root","read");
+	std::cout<< f.ls()<<std::endl;
 	// std::vector<MonitorElement *> mes = dqm->getAllContents("");
 	// for (std::vector<MonitorElement *>::iterator i = mes.begin(), e = mes.end(); i != e; ++i)
 	// std::cout << "ME '" << (*i)->getFullname() << "'\n";
