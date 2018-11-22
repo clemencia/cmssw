@@ -25,7 +25,7 @@ else:
         runnumber  = int(arguments[5])
         print "runno = ",runnumber
     if len(arguments)>6:
-        doDummy    = bool(arguments[6])
+        doDummy    = (arguments[6].lower()=="true")
         print "useDummyValues = ",doDummy
     if len(arguments)>7: 
         gainlo     = float(arguments[7])

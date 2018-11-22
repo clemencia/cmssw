@@ -40,6 +40,7 @@ class WriteCTPPSPixGainCalibrations : public edm::one::EDAnalyzer<>
   void getHistos();
   void fillDB();
   void getGainsPedsFromHistos(uint32_t detid,int rocId, int index, std::vector<double>&peds,std::vector<double>&gains,std::map<int,int> & myindxmap, int nrocs);
+  void setDummyFullPlane(std::vector<float>&peds,std::vector<float>&gains,int npixplane);
   // ----------Member data ---------------------------
   std::string m_record;
   std::string m_inputHistosFileName;
@@ -137,32 +138,44 @@ WriteCTPPSPixGainCalibrations::getHistos()
     for(int st=0 ; st < nst ; st ++)
       for(int pot = 0 ; pot < npt ; pot++){
 	int arm =i;
-	char temppathrp[100];
+
+	//Check which pots present
+        char temppathrp[100];
 	sprintf(temppathrp,"CTPPS/CTPPS_SEC%d/CTPPS_SEC%d_RP%d%d%d",sector[i],sector[i],arm,station[st],pot);
-	if(m_inputRootFile->Get(temppathrp)){
-	  for(int plane=0 ; plane<6 ; plane++){
-	    CTPPSPixelDetId mytempid(arm,station[st],pot,plane);
-	    std::vector<std::string> histnamevec;
-	    std::vector<int> listrocs;
-	    for(int roc=0 ; roc<6 ; roc++){
-	      char temppathhistos[200];
-	      
-	      sprintf(temppathhistos,"CTPPS/CTPPS_SEC%d/CTPPS_SEC%d_RP%d%d%d/CTPPS_SEC%d_RP%d%d%d_PLN%d/CTPPS_SEC%d_RP%d%d%d_PLN%d_ROC%d",
-		      sector[i],sector[i],arm,station[st],pot,sector[i],arm,station[st],pot,plane,sector[i],arm,station[st],pot,plane,roc);
-	      
-	      std::string pathhistos(temppathhistos);
-	      std::string pathslope    = pathhistos + "_Slope2D";
-	      std::string pathintercept= pathhistos + "_Intercept2D";
-	      if( m_inputRootFile->Get(pathslope.c_str()) &&  m_inputRootFile->Get(pathintercept.c_str())){
-		histnamevec.push_back(pathhistos);
-		listrocs.push_back(roc);
-	      }
+	if(!m_inputRootFile->Get(temppathrp))continue;
+
+	for(int plane=0 ; plane<6 ; plane++){
+
+	  //Check which planes present
+	  char temppathplane[100];
+	  sprintf(temppathplane,"CTPPS/CTPPS_SEC%d/CTPPS_SEC%d_RP%d%d%d/CTPPS_SEC%d_RP%d%d%d_PLN%d",sector[i],sector[i],arm,station[st],pot,sector[i],arm,station[st],pot,plane);
+
+	  // do not skip the missing plane, instead put dummy values
+	  //	  if(!m_inputRootFile->Get(temppathplane)) continue;
+
+ 
+	  CTPPSPixelDetId mytempid(arm,station[st],pot,plane);
+	  std::vector<std::string> histnamevec;
+	  std::vector<int> listrocs;
+	  for(int roc=0 ; roc<6 ; roc++){
+	    char temppathhistos[200];
+	    
+	    sprintf(temppathhistos,"CTPPS/CTPPS_SEC%d/CTPPS_SEC%d_RP%d%d%d/CTPPS_SEC%d_RP%d%d%d_PLN%d/CTPPS_SEC%d_RP%d%d%d_PLN%d_ROC%d",
+		    sector[i],sector[i],arm,station[st],pot,sector[i],arm,station[st],pot,plane,sector[i],arm,station[st],pot,plane,roc);
+	    
+	    std::string pathhistos(temppathhistos);
+	    std::string pathslope    = pathhistos + "_Slope2D";
+	    std::string pathintercept= pathhistos + "_Intercept2D";
+	    if( m_inputRootFile->Get(pathslope.c_str()) &&  m_inputRootFile->Get(pathintercept.c_str())){
+	      histnamevec.push_back(pathhistos);
+	      listrocs.push_back(roc);
 	    }
-	    detidHistoNameMap[mytempid.rawId()]      = histnamevec;
-	    detidROCsPresent[mytempid.rawId()]      = listrocs;
-	    std::cout << "Raw DetId = "<< mytempid.rawId() <<" Arm = "<< arm << " Sector = "<< sector[arm] << " Station = "<< station[st] << " Pot = "<<pot << " Plane = "<<plane  <<std::endl;
 	  }
+	  detidHistoNameMap[mytempid.rawId()]      = histnamevec;
+	  detidROCsPresent[mytempid.rawId()]      = listrocs;
+	  std::cout << "Raw DetId = "<< mytempid.rawId() <<" Arm = "<< arm << " Sector = "<< sector[arm] << " Station = "<< station[st] << " Pot = "<<pot << " Plane = "<<plane  <<std::endl;
 	}
+	
       }
 }
 
@@ -175,23 +188,21 @@ WriteCTPPSPixGainCalibrations::fillDB()
   CTPPSPixelGainCalibrations * gainCalibsTest = new CTPPSPixelGainCalibrations();
   CTPPSPixelGainCalibrations * gainCalibsTest1= new CTPPSPixelGainCalibrations();
 
-  std::cout<<"Here! "<<std::endl;  
+  //  std::cout<<"Here! "<<std::endl;  
  
   for (std::map<uint32_t,std::vector<int> >::iterator it=detidROCsPresent.begin(); it!=detidROCsPresent.end(); ++it){
          uint32_t tempdetid= it->first;
 	 std::vector<int> rocs = it->second;
 	 unsigned int nrocs = rocs.size();
 	 std::map<int,int> mapIPixIndx ;
-	 
+
 	 std::vector<double> gainsFromHistos;
 	 std::vector<double> pedsFromHistos;
 
 	 CTPPSPixelGainCalibration tempPGCalib;
 
-	 
 	 for (unsigned int i = 0; i<nrocs ; i++){
 	   getGainsPedsFromHistos(tempdetid,i, rocs[i], pedsFromHistos,gainsFromHistos,mapIPixIndx,nrocs);
-
 	 }
 
 
@@ -206,8 +217,17 @@ WriteCTPPSPixGainCalibrations::fillDB()
 	   tempPGCalib.putData(k,tmpped,tmpgain);
 	 }
 
+
+	 if(nrocs==0){
+	   std::cout<<" plane with detID ="<<tempdetid<<" is empty"<<std::endl;
+	   setDummyFullPlane(orderedPeds,orderedGains,6*52*80);
+	 }
+
 	 gainCalibsTest->setGainCalibration(tempdetid,orderedPeds,orderedGains);
+	 //	 std::cout << "Here detid = "<<tempdetid <<std::endl;
 	 gainCalibsTest1->setGainCalibration(tempdetid,tempPGCalib);
+	 //	 std::cout << "Here again"<<std::endl;
+
   }
   //  std::cout<<" Here 3!"<<std::endl;
   edm::Service<cond::service::PoolDBOutputService> mydbservice;
@@ -219,6 +239,16 @@ WriteCTPPSPixGainCalibrations::fillDB()
 
 }
 
+void
+WriteCTPPSPixGainCalibrations::setDummyFullPlane(std::vector<float> &peds,std::vector<float> &gains, int npixplane) {
+  for (int i = 0 ; i<npixplane ; ++i){
+    peds.push_back(20.);
+    gains.push_back(0.5);
+  }
+}
+
+
+ 
 void 
 WriteCTPPSPixGainCalibrations::getGainsPedsFromHistos(uint32_t detid, int ROCindex, int rocId, std::vector<double> &peds,std::vector<double> &gains, std::map<int,int> & mymap, int nrocs) {
   CTPPSPixelIndices  modulepixels(52*nrocs/2,160);
@@ -229,7 +259,7 @@ WriteCTPPSPixGainCalibrations::getGainsPedsFromHistos(uint32_t detid, int ROCind
   std::string tmpnpfitsname = detidHistoNameMap[detid][ROCindex] + "_Npfits2D";
   TH2D * tempslope   = (TH2D*) m_inputRootFile->Get(tmpslopename.c_str()); 
   TH2D * tempintrcpt = (TH2D*) m_inputRootFile->Get(tmpitcpname.c_str()); 
-  TH2D * tempchi2    = (TH2D*) m_inputRootFile->Get(tmpchi2name.c_str()); 
+   // TH2D * tempchi2    = (TH2D*) m_inputRootFile->Get(tmpchi2name.c_str()); 
   TH2D * tempnpfit   = (TH2D*) m_inputRootFile->Get(tmpnpfitsname.c_str()); 
   int ncols = tempslope->GetNbinsX(); 
   int nrows = tempslope->GetNbinsY();
