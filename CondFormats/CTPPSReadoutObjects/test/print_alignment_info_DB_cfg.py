@@ -1,6 +1,13 @@
 import FWCore.ParameterSet.Config as cms
 process = cms.Process("GeometryInfo")
 
+import sys
+
+if len(sys.argv) >2:
+    runno = int(sys.argv[2])
+else:
+    runno = 1
+
 # minimum of logs
 process.MessageLogger = cms.Service("MessageLogger",
     statistics = cms.untracked.vstring(),
@@ -17,8 +24,8 @@ process.MessageLogger = cms.Service("MessageLogger",
 # no events to process
 process.source = cms.Source("EmptyIOVSource",
     timetype = cms.string('runnumber'),
-    firstValue = cms.uint64(1),
-    lastValue = cms.uint64(1),
+    firstValue = cms.uint64(runno),
+    lastValue = cms.uint64(runno),
     interval = cms.uint64(1)
 )
 process.maxEvents = cms.untracked.PSet(
@@ -28,22 +35,22 @@ process.maxEvents = cms.untracked.PSet(
 #Database output service
 process.load("CondCore.CondDB.CondDB_cfi")
 # input database (in this case local sqlite file)
-process.CondDB.connect = 'sqlite_file:CTPPSRPAlignment.db'
+process.CondDB.connect = 'sqlite_file:CTPPSRPRealAlignment_table.db'
 
 process.PoolDBESSource = cms.ESSource("PoolDBESSource",
     process.CondDB,
     DumpStat=cms.untracked.bool(True),
     toGet = cms.VPSet(
       cms.PSet(
-        record = cms.string('RPMisalignedAlignmentRecord'),
-        tag = cms.string("CTPPSRPAlignment_misaligned")
+        record = cms.string('RPRealAlignmentRecord'),
+        tag = cms.string("CTPPSRPAlignment_real_table")
       )
     )
 )
 
 
 process.ctppsAlignmentInfo = cms.EDAnalyzer("CTPPSAlignmentInfo",
-    alignmentType = cms.untracked.string("misaligned"),
+    alignmentType = cms.untracked.string("real"),
 )
 
 process.p = cms.Path(
