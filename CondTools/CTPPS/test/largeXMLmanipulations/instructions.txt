@@ -9,3 +9,6 @@ python3 -i check_iov_boundaries_global_vs_timing.py
 ### the list of iov start numbers to add to the skip list in run_...._v2.py
 ### a = [i for i in list_goodtiming if i not in list_goodreal]
 
+## One last detail: in order to include the iov boundaries for RPix alignments we need to 
+## CREATE the real_alignment_iovXXX.xml files for those boundaries (286693 and 309055)
+## by copying the previous IOV file and fixing the iov first and last numbers in the xmls
