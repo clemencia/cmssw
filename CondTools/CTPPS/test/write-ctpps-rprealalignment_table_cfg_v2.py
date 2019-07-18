@@ -36,7 +36,7 @@ process.ctppsRPAlignmentCorrectionsDataESSourceXML.RealFiles = cms.vstring(
     "CondTools/CTPPS/test/"+subdir+"RPixGeometryCorrections-2017-2018.xml",
     "CondTools/CTPPS/test/"+subdir+"timing_RP_2017_preTS2_v2.xml",
     "CondTools/CTPPS/test/"+subdir+"timing_RP_2017_postTS2_v2.xml",
-    "CondTools/CTPPS/test/"+subdir+"timing_RP_2018_v2.xml",
+    "CondTools/CTPPS/test/"+subdir+"timing_RP_2018_v4.xml",
     "CondTools/CTPPS/test/"+subdir+"real_alignment_iov"+startrun+".xml"
     )
 process.ctppsRPAlignmentCorrectionsDataESSourceXML.MeasuredFiles = cms.vstring("CondFormats/CTPPSReadoutObjects/xml/sample_alignment_corrections.xml")

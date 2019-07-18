@@ -5,7 +5,7 @@ list_timing_iovs=[]
 list_realali_iovs=[]
 
 ldir = os.listdir(".")
-print( ldir  )
+#print( ldir  )
 
 for fname in ldir:
     if "timing_alignment_iov" in fname and ".xml" in fname:
@@ -40,7 +40,6 @@ for i,iov in enumerate(list_realali_iovs):
     list_goodreal_iov.append(iov)
     print("Real Alignment for  IOV start ",iov)
 
-print(list_goodreal_iov)
 
 list_goodtiming_iov=[]
 for i,iov in enumerate(list_timing_iovs):
@@ -58,5 +57,14 @@ for i,iov in enumerate(list_timing_iovs):
     print("Timing Vertical Alignment for  IOV start ",iov)
 
 
-print(list_goodtiming_iov)
 
+a = [ item for item in list_goodtiming_iov if item not in list_realali_iovs]
+b = [ item for item in list_goodtiming_iov if item not in list_goodreal_iov]
+
+print("number of 'good' iovs for global alignment: ", len(list_goodreal_iov))
+print("number of 'good' iovs for timing rp alignments : ",len(list_goodtiming_iov))
+
+print("a (should be empty)",a)
+print("b (iovs to add to rpix_timing_iovs in script run_rp..._v2.py):\n")
+bs = [str(i) for i in b]
+print(bs)

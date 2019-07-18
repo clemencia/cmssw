@@ -1,0 +1,11 @@
+#first run the two scripts to "split" the timing and real alignment
+python3 script_tables_global.py
+python3 script_tables_timing.py
+#the result should be a bunch of single-iov-xmls files
+#create a txt file with the file names of real aligment single-iov xml files
+ls -ltrh largeXMLmanipulations/real*xml > list_realali.txt
+#then run the comparison
+python3 -i check_iov_boundaries_global_vs_timing.py
+### the list of iov start numbers to add to the skip list in run_...._v2.py
+### a = [i for i in list_goodtiming if i not in list_goodreal]
+

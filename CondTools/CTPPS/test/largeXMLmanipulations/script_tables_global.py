@@ -1,7 +1,7 @@
 from __future__ import print_function
 import subprocess
 
-infile   = open("alignment_export_2019_06_12.xml","rt")
+infile   = open("alignment_export_2019_07_11.xml","rt")
 xmllines = infile.readlines()
 infile.close()
 #tree = ET.parse(infilename)

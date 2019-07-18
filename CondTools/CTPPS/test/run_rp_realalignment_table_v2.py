@@ -29,8 +29,8 @@ iovs_file.close()
 
 rpix_timing_iovs = ["286693","309055", # RPix IOV start 2017 e 2018
                     #                ### old    "294730","303615","314158" # Timing 2017 preTS2, 2017 postTS2 and 2018
-                    "303998", "306029", "322179"   
                     #  boundaries for timing alignments ### b=[ item for item in list_goodtiming_iov if item not in list_goodreal_iov]
+                    "303998", "306029", "320688", "322201", "322252", "322355", "323487", "323775", "323976", "324245", "325159"
                     ]
 
 for i in range(0,len(iovs_list)):
