@@ -12,3 +12,10 @@ python3 -i check_iov_boundaries_global_vs_timing.py
 ## One last detail: in order to include the iov boundaries for RPix alignments we need to 
 ## CREATE the real_alignment_iovXXX.xml files for those boundaries (286693 and 309055)
 ## by copying the previous IOV file and fixing the iov first and last numbers in the xmls
+
+## Finally to create the sqlite you must run
+python3 run_rp_realalignment_table_v2.py list_realali.txt largeXMLmanipulations <true or false> <tagname> <sqlitefilename> 
+
+## option true will make a "dry run", just checking the files and iovs without running cmssw
+## option false will run cmssw and create the sqlite containing the tag  will all iovs in list_realali and checking for duplicates
+
