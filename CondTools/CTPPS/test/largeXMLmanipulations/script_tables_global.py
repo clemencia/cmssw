@@ -1,7 +1,10 @@
 from __future__ import print_function
 import subprocess
+import sys
 
-infile   = open("alignment_export_2019_07_11.xml","rt")
+xmlname = sys.argv[1]
+
+infile   = open(xmlname,"rt")
 xmllines = infile.readlines()
 infile.close()
 #tree = ET.parse(infilename)

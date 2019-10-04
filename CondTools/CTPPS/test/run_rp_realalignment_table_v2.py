@@ -11,6 +11,11 @@ from __future__ import print_function
 import subprocess
 import sys
 
+
+## to run do
+## python3 run_rp_realalignment_table_v2.py list_realali.txt largeXMLmanipulations <true or false> <tagname> <sqlitefilename>
+##
+ 
 iovs_file = open(sys.argv[1])
 path=sys.argv[2]
 dryRun = bool(sys.argv[3]=="true" or sys.argv[3]=="True" or sys.argv[3] == "TRUE" or sys.argv[3]=="1")
@@ -19,8 +24,8 @@ if len(sys.argv) > 5:
     tagname = sys.argv[4]
     filename = sys.argv[5]
 else:
-    tagname=""
-    filename=""
+    tagname="PPSRPAlignment_test"
+    filename="PPSRPAlignment.db"
 
 iovs_lines = iovs_file.readlines()
 iovs_list = [(x.split("_iov")[1]).split(".xml")[0] for x in iovs_lines]
@@ -30,7 +35,9 @@ iovs_file.close()
 rpix_timing_iovs = ["286693","309055", # RPix IOV start 2017 e 2018
                     #                ### old    "294730","303615","314158" # Timing 2017 preTS2, 2017 postTS2 and 2018
                     #  boundaries for timing alignments ### b=[ item for item in list_goodtiming_iov if item not in list_goodreal_iov]
-                    "303998", "306029", "320688", "322201", "322252", "322355", "323487", "323775", "323976", "324245", "325159"
+#                    "303998", "306029", "320688", "322201", "322252", "322355", "323487", "323775", "323976", "324245", "325159"
+#                    '303824', '303998', '306029', '320688', '322201', '322252', '322355', '323487', '323775', '323976', '324245', '325159'
+                    '303998', '306029', '320688', '322201', '322252', '322355', '323487', '323775', '323976', '324245', '325159'
                     ]
 
 for i in range(0,len(iovs_list)):

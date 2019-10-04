@@ -1,14 +1,36 @@
+###### NEW INSTRUCTIONS  ########
+###### By CMH            ########
+###### October 2019      ########
+
+
+##first run the shell script
+
+./split_files_and_check.sh <alignment_export_file_blahblah.xml>
+
+## the above script creates two directories: globalfiles and timingfiles and two "good" iov lists: list_realgood.txt and list_timing.txt
+## go up to the test directory, and run
+
+python3 run_rp_realalignment_table_v3.py <XMLDir> <true or false> <PPSRPAlignment_real_tag> <PPSRPAlignmentfile.db>
+
+## make sure the RPix and timing alignment files are present in the directory <XMLDir> 
+## and the globalfiles subdirectory  (created by the previous script) is there as well
+## the option "true" runs only the test that prints a list of IOVs to be processed, without creating the sqlite file
+## i.e. in order to create the sqlite this option should be false 
+
+
+
+######################################
+### OLD INSTRUCTIONS for reference only
 #first run the two scripts to "split" the timing and real alignment
-python3 script_tables_global.py
-python3 script_tables_timing.py
+#python3 script_tables_global.py
+#python3 script_tables_timing.py
 #the result should be a bunch of single-iov-xmls files
 #create a txt file with the file names of real aligment single-iov xml files
-ls -ltrh largeXMLmanipulations/real*xml > list_realali.txt
+#ls -ltrh largeXMLmanipulations/real*xml > list_realali.txt
 #then run the comparison
-python3 -i check_iov_boundaries_global_vs_timing.py
+#python3 -i check_iov_boundaries_global_vs_timing.py
 ### the list of iov start numbers to add to the skip list in run_...._v2.py
 ### a = [i for i in list_goodtiming if i not in list_goodreal]
-
 ## One last detail: in order to include the iov boundaries for RPix alignments we need to 
 ## CREATE the real_alignment_iovXXX.xml files for those boundaries (286693 and 309055)
 ## by copying the previous IOV file and fixing the iov first and last numbers in the xmls
