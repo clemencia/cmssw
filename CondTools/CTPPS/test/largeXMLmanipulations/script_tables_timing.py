@@ -2,11 +2,9 @@ from __future__ import print_function
 import subprocess
 
 
-timingfiles = ["timing_RP_2017_preTS2_v2.xml","timing_RP_2017_postTS2_v2.xml","timing_RP_2018_v4.xml"]
+timingfiles = ["timing_RP_2017_preTS2_v2.xml","timing_RP_2017_postTS2_v3.xml","timing_RP_2018_v4.xml"]
 for tfile in timingfiles:
-    infile   = open(
-        #"alignment_export_2019_04_18.1.xml"
-        tfile,"rt")
+    infile   = open(tfile,"rt")
     xmllines = infile.readlines()
     infile.close()
     #tree = ET.parse(infilename)

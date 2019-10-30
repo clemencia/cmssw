@@ -37,16 +37,16 @@ tfile.close()
 
 rpix_iovs = ["286693","309055"#, # RPix IOV start 2017 e 2018
                     ]
-
-iovs_list = iovs_list + rpix_iovs
-tiovs_list.sort()
-iovs_list.sort()
-
-timing_iovs =    tiovs_list 
-
 ### old    ["294730","303615","314158"] # Timing 2017 preTS2, 2017 postTS2 and 2018
+tiovs_list = [ i.rstrip("\n") for i in tiovs_list]
+iovs_list  = [ i.rstrip("\n") for i in iovs_list]
+ 
+rpix_timing_iovs = rpix_iovs + tiovs_list
 
-rpix_timing_iovs = rpix_iovs + timing_iovs
+iovs_list = iovs_list+ rpix_timing_iovs
+
+iovs_list.sort()
+ 
 
 for i in range(0,len(iovs_list)):
     runno = iovs_list[i].strip()
