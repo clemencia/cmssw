@@ -1,10 +1,17 @@
 from __future__ import print_function
-import subprocess
+import subprocess as sp
+
+#import sys
+
+#xmlname = sys.argv[1]
 
 
-timingfiles = ["timing_RP_2017_preTS2_v2.xml","timing_RP_2017_postTS2_v3.xml","timing_RP_2018_v4.xml"]
-for tfile in timingfiles:
-    infile   = open(tfile,"rt")
+listxmls = sp.getoutput("ls F*timing*xml").split("\n")
+
+#timingfiles = ["timing_RP_2017_preTS2_v2.xml","timing_RP_2017_postTS2_v3.xml","timing_RP_2018_v4.xml"]
+#for tfile in timingfiles:
+for xmlname in listxmls:
+    infile   = open(xmlname,"rt")
     xmllines = infile.readlines()
     infile.close()
     #tree = ET.parse(infilename)
@@ -25,7 +32,7 @@ for tfile in timingfiles:
                 outfile.write(lastline)
                 outfile.close()
                 outfilename = "timing_alignment_iov"+str(iov)+".xml"
-                output = subprocess.run("mv test.xml "+outfilename, shell=True, check=True)
+                output = sp.run("mv test.xml "+outfilename, shell=True, check=True)
                 outfile=open("test.xml","wt")
             else:
                 outfile.write(firstline)

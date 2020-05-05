@@ -1,7 +1,9 @@
 #!/bin/sh
 
 echo "Splitting global alignment files"
-python3 script_tables_global.py $1
+
+python3 script_tables_global.py 
+
 echo "Creating file for iov 309055"
 cp real_alignment_iov307082.xml real_alignment_iov309055.xml
 sed -i "s/307082/309055/g" real_alignment_iov309055.xml
@@ -15,7 +17,8 @@ mkdir globalfiles
 mv real_alignment*xml globalfiles
 
 echo "Splitting timing alignment files"
-python3 script_tables_timing.py
+python3 script_tables_timing.py 
+
 mkdir timingfiles
 mv timing_alignment*xml timingfiles
 
