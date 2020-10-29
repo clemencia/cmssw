@@ -1,0 +1,6 @@
+<library file="PPSPixelGainCalibrations_PayloadInspector.cc" name="PPSPixelGainCalibrations_PayloadInspector">
+  <use name="CondCore/Utilities"/>
+  <use name="CondCore/CondDB"/>
+  <use name="CondFormats/PPSObjects"/>
+  <use name="DataFormats/CTPPSDetId"/>
+</library>
