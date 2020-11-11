@@ -33,5 +33,17 @@ getPayloadData.py \
     --test;
 
 
+getPayloadData.py \
+    --plugin pluginPPSPixelGainCalibrations_PayloadInspector \
+    --plot plot_PPSPixelGainCalibrationsPedestalsDiff \
+    --tag  CTPPSPixelGainCalibrations_v3_offline \
+    --tagtwo CTPPSPixelGainCalibrations_v2_offline \
+    --time_type Run \
+    --iovs    '{"start_iov": "323201", "end_iov": "323201"}' \
+    --iovstwo '{"start_iov": "305582", "end_iov": "305582"}' \
+    --db Prod \
+    --test;
+
+
 mv *.png $W_DIR/results/
 
